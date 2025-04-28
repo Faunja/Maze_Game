@@ -1,13 +1,14 @@
 import pygame, time, copy
 from pygame.locals import *
 from User.define_user import User
+from User.define_display import Display
 from Grid.define_grid import Grid
 
 class define_Character():
 	def __init__(self):
-		self.outline = 4 / 5
 		self.color = (60, 60, 195)
 		self.width = Grid.boxSize / 4
+		self.outline = 4 / 5
 
 		self.position = [0, 0]
 		self.startgridPosition = [round(Grid.gridSize / 2), round(Grid.gridSize / 2)]
@@ -15,6 +16,11 @@ class define_Character():
 		self.mazePosition = [round(Grid.mazeSize / 2), round(Grid.mazeSize / 2)]
 		self.currentPositions = [[self.gridPosition, self.mazePosition]]
 		self.oldPositions = []
+		self.storedPositions = []
+		for row in range(Grid.gridSize):
+			self.storedPositions.append([])
+			for column in range(Grid.gridSize):
+				self.storedPositions[row].append([])
 
 		self.movement = [0, 0]
 		self.maxVelocity = self.width / 5
@@ -23,7 +29,7 @@ class define_Character():
 		self.stillFriction = .8
 		self.movingFriction = .9
 
-		self.differenceLimit = [User.DisplayWidth / 4, User.DisplayHeight / 4]
+		self.differenceLimit = [Display.DisplayWidth / 4, Display.DisplayHeight / 4]
 		self.cameraMoving = False
 		self.cameraPosition = [0, 0]
 		self.cameraVelocity = 1 / 20
@@ -83,32 +89,9 @@ class define_Character():
 
 	def update_oldPositions(self):
 		for position in self.currentPositions:
-			if position in self.oldPositions:
+			if position[1] in self.storedPositions[position[0][1]][position[0][0]]:
 				continue
-			if position[0] in self.oldPositions:
-				continue
-			self.oldPositions.append(position)
-		gridPositions = []
-		for oldPosition in self.oldPositions:
-			addPosition = True
-			if isinstance(oldPosition[0], int):
-				continue
-			for gridPosition in gridPositions:
-				if gridPosition[0] == oldPosition[0]:
-					gridPosition[1] += 1
-					addPosition = False
-					break
-			if addPosition == True:
-				gridPositions.append([oldPosition[0], 1])
-		removegridPositions = []
-		for gridPosition in gridPositions:
-			if gridPosition[1] == Grid.mazeSize ** 2 - 2:
-				removegridPositions.append(gridPosition[0])
-		for oldPosition in self.oldPositions.copy():
-			if oldPosition[0] in removegridPositions:
-				self.oldPositions.remove(oldPosition)
-		for gridPositions in removegridPositions:
-			self.oldPositions.append(gridPositions.copy())
+			self.storedPositions[position[0][1]][position[0][0]].append(position[1])
 
 	def update_currentPosition(self):
 		self.currentPositions = []
@@ -172,7 +155,7 @@ class define_Character():
 			self.currentPositions.append([[self.gridPosition[0], self.gridPosition[1] + checkPositive[1][1]], [self.mazePosition[0], self.mazePosition[1] + checkPositive[1][2]]])
 
 	def update_gridPosition(self):
-		self.gridPosition = [round(Grid.gridSize / 2) + round(self.position[0] / User.DisplayWidth), round(Grid.gridSize / 2) + round(self.position[1] / User.DisplayHeight)]
+		self.gridPosition = [round(Grid.gridSize / 2) + round(self.position[0] / Display.DisplayWidth), round(Grid.gridSize / 2) + round(self.position[1] / Display.DisplayHeight)]
 		currentgridPosition = [self.gridPosition[0] - self.startgridPosition[0], self.gridPosition[1] - self.startgridPosition[1]]
 		xmazePosition = round(Grid.mazeSize / 2) + round(self.position[0] / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize
 		ymazePosition = round(Grid.mazeSize / 2) + round(self.position[1] / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize

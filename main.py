@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from User.define_user import User
-from User.event_handler import event_handler
+from event_handler import event_handler
 from display_game import display_game
 
 def main():
