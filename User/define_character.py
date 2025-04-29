@@ -1,7 +1,7 @@
 import pygame, time, copy
 from pygame.locals import *
 from User.define_user import User
-from User.define_display import Display
+from Display.define_display import Display
 from Grid.define_grid import Grid
 
 class define_Character():
@@ -29,7 +29,7 @@ class define_Character():
 		self.stillFriction = .8
 		self.movingFriction = .9
 
-		self.differenceLimit = [Display.DisplayWidth / 4, Display.DisplayHeight / 4]
+		self.differenceLimit = [Display.DisplayHeight / 4, Display.DisplayHeight / 4]
 		self.cameraMoving = False
 		self.cameraPosition = [0, 0]
 		self.cameraVelocity = 1 / 20
@@ -155,7 +155,7 @@ class define_Character():
 			self.currentPositions.append([[self.gridPosition[0], self.gridPosition[1] + checkPositive[1][1]], [self.mazePosition[0], self.mazePosition[1] + checkPositive[1][2]]])
 
 	def update_gridPosition(self):
-		self.gridPosition = [round(Grid.gridSize / 2) + round(self.position[0] / Display.DisplayWidth), round(Grid.gridSize / 2) + round(self.position[1] / Display.DisplayHeight)]
+		self.gridPosition = [round(Grid.gridSize / 2) + round(self.position[0] / Display.DisplayHeight), round(Grid.gridSize / 2) + round(self.position[1] / Display.DisplayHeight)]
 		currentgridPosition = [self.gridPosition[0] - self.startgridPosition[0], self.gridPosition[1] - self.startgridPosition[1]]
 		xmazePosition = round(Grid.mazeSize / 2) + round(self.position[0] / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize
 		ymazePosition = round(Grid.mazeSize / 2) + round(self.position[1] / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize
@@ -171,7 +171,7 @@ class define_Character():
 		Grid.update_chunks(self.gridPosition)
 		self.update_oldPositions()
 		self.update_currentPosition()
-
+	
 	def move_character(self):
 		self.position[0] += self.velocity[0]
 		self.position[1] += self.velocity[1]

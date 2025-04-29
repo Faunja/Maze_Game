@@ -1,17 +1,12 @@
 import pygame
 from pygame.locals import *
 from User.define_user import User
-from User.define_display import Display
+from Display.define_display import Display
 from User.define_character import Character
 from Grid.define_grid import Grid
 
-wallColor = (255, 255, 255)
-memorywallColor = (195, 195, 195)
-floorColor = (0, 0, 0)
-defaultFont = pygame.font.Font(pygame.font.get_default_font(), round(Display.DisplayWidth / 32))
-
 def print_text(text, position, color = (255, 255, 255)):
-	printed = defaultFont.render(text, True, color)
+	printed = Display.font.render(text, True, color)
 	printed_width, printed_height = printed.get_size()
 	Display.Display.blit(printed, (position[0] * printed_width, position[1] * printed_height))
 
@@ -24,7 +19,7 @@ def display_FPS():
 def display_character():
 		position = [Character.position[0] - Character.cameraPosition[0] + Display.CenterDisplay[0], Character.position[1] - Character.cameraPosition[1] + Display.CenterDisplay[1]]
 		outlineRect = (round(position[0] - Character.width / 2), round(position[1] - Character.width / 2), Character.width, Character.width)
-		pygame.draw.rect(Display.Display,  wallColor, outlineRect)
+		pygame.draw.rect(Display.Display,  Display.wallColor, outlineRect)
 		innerRect = (round(position[0] - Character.width / 2 * Character.outline), round(position[1] - Character.width / 2 * Character.outline), Character.width * Character.outline, Character.width * Character.outline)
 		pygame.draw.rect(Display.Display,  Character.color, innerRect)
 
@@ -44,7 +39,7 @@ def draw_maze(Maze, offset, color):
 		if -Grid.boxSize > yPosition or Display.DisplayHeight < yPosition:
 			continue
 		for column in range(len(Maze.maze)):
-			xPosition = column * Grid.boxSize - offset[0]
+			xPosition = column * Grid.boxSize - offset[0] + Display.ScreenOffset
 			if -Grid.boxSize > xPosition or Display.DisplayWidth < xPosition:
 				continue
 			display_box(Maze.maze[row][column], (xPosition, yPosition), color)
@@ -54,7 +49,7 @@ def display_grid():
 		for y in range(-1, 2):
 			xOffset = Character.cameraPosition[0] + x * Grid.boxSize * Grid.mazeSize - (Character.gridPosition[0] - round(Grid.gridSize / 2)) * Grid.mazeSize * Grid.boxSize
 			yOffset = Character.cameraPosition[1] + y * Grid.boxSize * Grid.mazeSize - (Character.gridPosition[1] - round(Grid.gridSize / 2)) * Grid.mazeSize * Grid.boxSize
-			draw_maze(Grid.grid[Character.gridPosition[1] - y][Character.gridPosition[0] - x], [xOffset, yOffset], wallColor)
+			draw_maze(Grid.grid[Character.gridPosition[1] - y][Character.gridPosition[0] - x], [xOffset, yOffset], Display.wallColor)
 
 def display_memoryGrid():
 	for x in range(-1, 2):
@@ -63,27 +58,28 @@ def display_memoryGrid():
 			yPosition = Character.gridPosition[1] + y
 			for box in Character.storedPositions[yPosition][xPosition]:
 				Maze = Grid.grid[Character.gridPosition[1] + y][Character.gridPosition[0] + x]
-				xOffset = box[0] * Grid.boxSize - (Character.cameraPosition[0] - (xPosition - Character.startgridPosition[0]) * Grid.mazeSize * Grid.boxSize)
+				xOffset = box[0] * Grid.boxSize - (Character.cameraPosition[0] - (xPosition - Character.startgridPosition[0]) * Grid.mazeSize * Grid.boxSize) + Display.ScreenOffset
 				if xOffset < -Grid.boxSize or xOffset > Display.DisplayWidth + Grid.boxSize:
 					continue
 				yOffset = box[1] * Grid.boxSize - (Character.cameraPosition[1] - (yPosition - Character.startgridPosition[1]) * Grid.mazeSize * Grid.boxSize)
 				if yOffset < -Grid.boxSize or yOffset > Display.DisplayHeight + Grid.boxSize:
 					continue
-				display_box(Maze.maze[box[1]][box[0]], [xOffset, yOffset], memorywallColor)
+				display_box(Maze.maze[box[1]][box[0]], [xOffset, yOffset], Display.memorywallColor)
 
 	for curerentPosition in Character.currentPositions:
 		Maze = Grid.grid[curerentPosition[0][1]][curerentPosition[0][0]]
-		xOffset = curerentPosition[1][0] * Grid.boxSize - (Character.cameraPosition[0] - (curerentPosition[0][0] - Character.startgridPosition[0]) * Grid.mazeSize * Grid.boxSize)
+		xOffset = curerentPosition[1][0] * Grid.boxSize - (Character.cameraPosition[0] - (curerentPosition[0][0] - Character.startgridPosition[0]) * Grid.mazeSize * Grid.boxSize) + Display.ScreenOffset
 		if xOffset < -Grid.boxSize or xOffset > Display.DisplayWidth + Grid.boxSize:
 			continue
 		yOffset = curerentPosition[1][1] * Grid.boxSize - (Character.cameraPosition[1] - (curerentPosition[0][1] - Character.startgridPosition[1]) * Grid.mazeSize * Grid.boxSize)
 		if yOffset < -Grid.boxSize or yOffset > Display.DisplayHeight + Grid.boxSize:
 			continue
-		display_box(Maze.maze[curerentPosition[1][1]][curerentPosition[1][0]], [xOffset, yOffset], wallColor)
+		display_box(Maze.maze[curerentPosition[1][1]][curerentPosition[1][0]], [xOffset, yOffset], Display.wallColor)
 
 def display_game():
-	pygame.draw.rect(Display.Display, floorColor, (0, 0, Display.DisplayWidth, Display.DisplayHeight))
+	pygame.draw.rect(Display.Display, Display.floorColor, (0, 0, Display.DisplayWidth, Display.DisplayHeight))
 	display_memoryGrid()
 	display_character()
-	display_FPS()
+	if Display.displayFPS == 1:
+		display_FPS()
 	

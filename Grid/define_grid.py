@@ -1,14 +1,14 @@
 import pygame, random, copy
 from pygame.locals import *
 from User.define_user import User
-from User.define_display import Display
+from Display.define_display import Display
 from Grid.define_maze import define_Maze
 
 class define_Grid:
 	def __init__(self, gridSize):
 		self.mazeSize = 9
-		self.boxSize = round(Display.DisplayWidth / self.mazeSize)
-		self.wallWidth = round(Display.DisplayWidth / 172)
+		self.boxSize = round(Display.DisplayHeight / self.mazeSize)
+		self.wallWidth = round(Display.DisplayHeight / 172)
 		if self.wallWidth < 1:
 			self.allWidth = 1
 		
