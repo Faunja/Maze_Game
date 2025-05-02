@@ -18,10 +18,12 @@ def event_handler():
 				Character.movement[0] = -1
 			if event.key in Controls.moveRight:
 				Character.movement[0] = 1
-			if event.key in Controls.changedisplayFPS:
-				Display.displayFPS = 1 - Display.displayFPS
+			if event.key in Controls.changedisplayStats:
+				Display.displayStats = 1 - Display.displayStats
 			if event.key == Controls.changeTime:
 				Display.change_time()
+			if event.key == Controls.fullscreen:
+				Display.toggle_fullscreen()
 
 		if event.type == pygame.KEYUP:
 			if event.key in Controls.moveDown and Character.movement[1] == 1:
@@ -32,6 +34,10 @@ def event_handler():
 				Character.movement[0] = 0
 			if event.key in Controls.moveRight and Character.movement[0] == 1:
 				Character.movement[0] = 0
+		
+		if event.type == pygame.VIDEORESIZE:
+			width, height = event.size
+			Display.change_displaySize(width, height)
 
 		if event.type == pygame.QUIT:
 			User.playing = False

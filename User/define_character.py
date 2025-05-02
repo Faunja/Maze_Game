@@ -1,13 +1,12 @@
 import pygame, time, copy
 from pygame.locals import *
 from User.define_user import User
-from Display.define_display import Display
 from Grid.define_grid import Grid
 
 class define_Character():
 	def __init__(self):
 		self.color = (60, 60, 195)
-		self.width = Grid.boxSize / 4
+		self.width = 1 / 4
 		self.outline = 4 / 5
 
 		self.position = [0, 0]
@@ -29,7 +28,7 @@ class define_Character():
 		self.stillFriction = .8
 		self.movingFriction = .9
 
-		self.differenceLimit = [Display.DisplayHeight / 4, Display.DisplayHeight / 4]
+		self.differenceLimit = [Grid.mazeSize / 4, Grid.mazeSize / 4]
 		self.cameraMoving = False
 		self.cameraPosition = [0, 0]
 		self.cameraVelocity = 1 / 20
@@ -58,7 +57,7 @@ class define_Character():
 		if self.cameraMoving == True:
 			self.cameraPosition[0] += (self.position[0] - self.cameraPosition[0]) * self.cameraVelocity
 			self.cameraPosition[1] += (self.position[1] - self.cameraPosition[1]) * self.cameraVelocity
-		if round(self.cameraPosition[0]) == round(self.position[0]) and round(self.cameraPosition[1]) == round(self.position[1]):
+		if round(self.cameraPosition[0], 3) == round(self.position[0], 3) and round(self.cameraPosition[1], 3) == round(self.position[1], 3):
 			self.cameraMoving = False
 
 	def hit_mazeWall(self):
@@ -155,7 +154,7 @@ class define_Character():
 			self.currentPositions.append([[self.gridPosition[0], self.gridPosition[1] + checkPositive[1][1]], [self.mazePosition[0], self.mazePosition[1] + checkPositive[1][2]]])
 
 	def update_gridPosition(self):
-		self.gridPosition = [round(Grid.gridSize / 2) + round(self.position[0] / Display.DisplayHeight), round(Grid.gridSize / 2) + round(self.position[1] / Display.DisplayHeight)]
+		self.gridPosition = [round(Grid.gridSize / 2) + round(self.position[0] / Grid.mazeSize), round(Grid.gridSize / 2) + round(self.position[1] / Grid.mazeSize)]
 		currentgridPosition = [self.gridPosition[0] - self.startgridPosition[0], self.gridPosition[1] - self.startgridPosition[1]]
 		xmazePosition = round(Grid.mazeSize / 2) + round(self.position[0] / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize
 		ymazePosition = round(Grid.mazeSize / 2) + round(self.position[1] / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize

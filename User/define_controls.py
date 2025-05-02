@@ -11,7 +11,7 @@ class define_Controls:
 		self.moveLeft = [pygame.K_a, pygame.K_LEFT]
 		self.moveRight = [pygame.K_d, pygame.K_RIGHT]
 		
-		self.changedisplayFPS = [pygame.K_f, pygame.K_F3]
+		self.changedisplayStats = [pygame.K_f, pygame.K_F3]
 		self.changeTime = pygame.K_c
 		self.fullscreen = pygame.K_F11
 
