@@ -30,9 +30,14 @@ class define_Display:
 	def change_displaySize(self, newWidth, newHeight):
 		self.DisplayWidth = newWidth
 		self.DisplayHeight = newHeight
-		self.ScreenOffset[1] = 0
-		self.ScreenOffset[0] = round((self.DisplayWidth - self.DisplayHeight) / 2)
-		self.tileSize = self.DisplayHeight / Grid.mazeSize
+		if self.DisplayHeight < self.DisplayWidth:
+			self.ScreenOffset[1] = 0
+			self.ScreenOffset[0] = round((self.DisplayWidth - self.DisplayHeight) / 2)
+			self.tileSize = self.DisplayHeight / Grid.mazeSize
+		else:
+			self.ScreenOffset[1] = round((self.DisplayHeight - self.DisplayWidth) / 2)
+			self.ScreenOffset[0] = 0
+			self.tileSize = self.DisplayWidth / Grid.mazeSize
 		self.CenterDisplay = [round(self.DisplayWidth / 2), round(self.DisplayHeight / 2)]
 		self.font = pygame.font.Font('Display/Fonts/m6x11.ttf', round(self.DisplayHeight / 32))
 	
