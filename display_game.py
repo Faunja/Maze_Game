@@ -8,7 +8,10 @@ from Grid.define_grid import Grid
 def print_text(text, position, color = (255, 255, 255)):
 	printed = Display.font.render(text, True, color)
 	printed_width, printed_height = printed.get_size()
-	Display.Display.blit(printed, (position[0] * printed_width, position[1] * printed_height))
+	if Character.completedMaze == False:
+		Display.Display.blit(printed, (position[0] * printed_width, position[1] * printed_height))
+	else:
+		Display.Display.blit(printed, (position[0] - printed_width / 2, position[1]))
 
 def display_stats():
 	print_text("("+str(Character.gridPosition[0])+", "+str(Character.gridPosition[1])+")", [0, 1], (120, 120, 255))
@@ -55,18 +58,26 @@ def display_grid():
 	displaycameraPosition = [Character.cameraPosition[0] * Display.tileSize, Character.cameraPosition[1] * Display.tileSize]
 	displayboxSize = Grid.boxSize * Display.tileSize
 	for x in range(-1, 2):
+		if Character.gridPosition[1] + y < 0 or Character.gridPosition[1] + y > Grid.gridSize - 1:
+			continue
 		for y in range(-1, 2):
+			if Character.gridPosition[0] + x < 0 or Character.gridPosition[0] + x > Grid.gridSize - 1:
+				continue
 			xOffset = displaycameraPosition[0] + x * displayboxSize * Grid.mazeSize - (Character.gridPosition[0] - round(Grid.gridSize / 2)) * Grid.mazeSize * displayboxSize + Display.ScreenOffset[0]
 			yOffset = displaycameraPosition[1] + y * displayboxSize * Grid.mazeSize - (Character.gridPosition[1] - round(Grid.gridSize / 2)) * Grid.mazeSize * displayboxSize + Display.ScreenOffset[1]
-			draw_maze(Grid.grid[Character.gridPosition[1] - y][Character.gridPosition[0] - x], [xOffset, yOffset], Display.wallColor)
+			draw_maze(Grid.grid[Character.gridPosition[1] + y][Character.gridPosition[0] + x], [xOffset, yOffset], Display.wallColor)
 
 def display_memoryGrid():
 	displaycameraPosition = [Character.cameraPosition[0] * Display.tileSize, Character.cameraPosition[1] * Display.tileSize]
 	displayboxSize = Grid.boxSize * Display.tileSize
-	for x in range(-1, 2):
-		xPosition = Character.gridPosition[0] + x
-		for y in range(-1, 2):
-			yPosition = Character.gridPosition[1] + y
+	for y in range(-1, 2):
+		yPosition = Character.gridPosition[1] + y
+		if yPosition < 0 or yPosition > Grid.gridSize - 1:
+			continue
+		for x in range(-1, 2):
+			xPosition = Character.gridPosition[0] + x
+			if xPosition < 0 or xPosition > Grid.gridSize - 1:
+				continue
 			for box in Character.storedPositions[yPosition][xPosition]:
 				Maze = Grid.grid[Character.gridPosition[1] + y][Character.gridPosition[0] + x]
 				xOffset = box[0] * displayboxSize - (displaycameraPosition[0] - (xPosition - Character.startgridPosition[0]) * Grid.mazeSize * displayboxSize) + Display.ScreenOffset[0]
@@ -89,8 +100,12 @@ def display_memoryGrid():
 
 def display_game():
 	pygame.draw.rect(Display.Display, Display.floorColor, (0, 0, Display.DisplayWidth, Display.DisplayHeight))
-	display_memoryGrid()
-	display_character()
-	if Display.displayStats == 1:
-		display_stats()
+	if Character.completedMaze == False:
+		display_memoryGrid()
+		display_character()
+		if Display.displayStats == 1:
+			display_stats()
+	else:
+		pygame.draw.rect(Display.Display, Display.floorColor, (0, 0, Display.DisplayWidth, Display.DisplayHeight))
+		print_text("Good Job.", [Display.DisplayWidth / 2, Display.DisplayHeight / 2], Display.wallColor)
 	

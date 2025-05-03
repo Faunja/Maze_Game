@@ -17,42 +17,83 @@ class define_Grid:
 			self.grid.append([])
 			for column in range(self.gridSize):
 				self.grid[row].append(None)
-
-	def check_emptyChunks(self, position):
-		for x in range(-1, 2):
-			for y in range(-1, 2):
-				if self.grid[position[1] + y][position[0] + x] == None:
-					return [position[0] + x, position[1] + y]
-		return True
-
-	def check_sideChunks(self, position):
-		sideChunks = []
-		for y in range(-1, 2):
-			for x in range(-1, 2):
-				if abs(y) == abs(x):
-					continue
-				if self.grid[position[1] + y][position[0] + x] != None:
-					sideChunks.append([position[0] + x, position[1] + y])
-		return sideChunks
+		self.create_exit()
 
 	def cut_chunkWalls(self, position):
 		maze = self.grid[position[1]][position[0]].maze
 		if position[0] % 2 == position[1] % 2:
-			maze[self.mazeSize - 1][self.mazeSize - 1][0] = 0
-			maze[0][0][1] = 0
-			maze[self.mazeSize - 1][0][2] = 0
-			maze[0][self.mazeSize - 1][3] = 0
+			if position[1] != self.gridSize - 1:
+				maze[self.mazeSize - 1][self.mazeSize - 1][0] = 0
+			if position[1] != 0:
+				maze[0][0][1] = 0
+			if position[0] != 0:
+				maze[self.mazeSize - 1][0][2] = 0
+			if position[0] != self.gridSize - 1:
+				maze[0][self.mazeSize - 1][3] = 0
 		else:
-			maze[self.mazeSize - 1][0][0] = 0
-			maze[0][self.mazeSize - 1][1] = 0
-			maze[0][0][2] = 0
-			maze[self.mazeSize - 1][self.mazeSize - 1][3] = 0
+			if position[1] != self.gridSize - 1:
+				maze[self.mazeSize - 1][0][0] = 0
+			if position[1] != 0:
+				maze[0][self.mazeSize - 1][1] = 0
+			if position[0] != 0:
+				maze[0][0][2] = 0
+			if position[0] != self.gridSize - 1:
+				maze[self.mazeSize - 1][self.mazeSize - 1][3] = 0
+
+	def create_exit(self):
+		downright = random.randint(0, 1)
+		positioning = [random.randint(0, 1), random.randint(0, self.gridSize - 1)]
+		downright = [(self.gridSize - 1) * downright * (1 - positioning[0]), (self.gridSize - 1) * downright * positioning[0]]
+		position = [positioning[0] * positioning[1] + downright[0], (1 - positioning[0]) * positioning[1] + downright[1]]
+		self.grid[position[1]][position[0]] = define_Maze(self.mazeSize)
+		self.cut_chunkWalls([position[0], position[1]])
+
+		Maze = self.grid[position[1]][position[0]].maze
+		potentialPositions = []
+
+		if position[0] != 0 and position[1] == self.gridSize - 1:
+			for box in range(0, self.mazeSize):
+				if Maze[self.mazeSize - 1][box][0] + Maze[self.mazeSize - 1][box][1] + Maze[self.mazeSize - 1][box][2] + Maze[self.mazeSize - 1][box][3] >= 2:
+					potentialPositions.append(box)
+			exitPosition = random.choice(potentialPositions)
+			Maze[self.mazeSize - 1][exitPosition][0] = 0
+	
+		if position[0] != self.gridSize - 1 and position[1] == 0:
+			for box in range(0, self.mazeSize):
+				if Maze[0][box][0] + Maze[0][box][1] + Maze[0][box][2] + Maze[0][box][3] >= 2:
+					potentialPositions.append(box)
+			exitPosition = random.choice(potentialPositions)
+			Maze[0][exitPosition][1] = 0
+		
+		if position[0] == 0 and position[1] != self.gridSize - 1:
+			for box in range(0, self.mazeSize):
+				if Maze[box][0][0] + Maze[box][0][1] + Maze[box][0][2] + Maze[box][0][3] >= 2:
+					potentialPositions.append(box)
+			exitPosition = random.choice(potentialPositions)
+			Maze[exitPosition][0][2] = 0
+		
+		if position[0] == self.gridSize - 1 and position[1] != 0:
+			for box in range(0, self.mazeSize):
+				if Maze[box][self.mazeSize - 1][0] + Maze[box][self.mazeSize - 1][1] + Maze[box][self.mazeSize - 1][2] + Maze[box][self.mazeSize - 1][3] >= 2:
+					potentialPositions.append(box)
+			exitPosition = random.choice(potentialPositions)
+			Maze[exitPosition][self.mazeSize - 1][3] = 0
+		
+	def check_emptyChunks(self, position):
+		for y in range(-1, 2):
+			if position[1] + y < 0 or position[1] + y > self.gridSize - 1:
+				continue
+			for x in range(-1, 2):
+				if position[0] + x < 0 or position[0] + x > self.gridSize - 1:
+					continue
+				if self.grid[position[1] + y][position[0] + x] == None:
+					return [position[0] + x, position[1] + y]
+		return True
 
 	def update_chunks(self, position):
 		goodChunks = self.check_emptyChunks(position)
 		while goodChunks != True:
 			self.grid[goodChunks[1]][goodChunks[0]] = define_Maze(self.mazeSize)
-			sideChunks = self.check_sideChunks([goodChunks[0], goodChunks[1]])
 			self.cut_chunkWalls([goodChunks[0], goodChunks[1]])
 			goodChunks = self.check_emptyChunks(position)
 

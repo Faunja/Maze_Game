@@ -6,7 +6,7 @@ from Grid.define_grid import Grid
 class define_Display:
 	def __init__(self):
 		self.fullscreen = False
-		self.displayDifference = 9 / 10
+		self.displayDifference = 4 / 5
 		self.DisplayWidth = round(User.ScreenSize[0] * self.displayDifference / Grid.mazeSize) * Grid.mazeSize
 		self.DisplayHeight = round(User.ScreenSize[1] * self.displayDifference / Grid.mazeSize) * Grid.mazeSize
 		self.ScreenOffset = [0, 0]

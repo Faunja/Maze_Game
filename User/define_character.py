@@ -5,6 +5,8 @@ from Grid.define_grid import Grid
 
 class define_Character():
 	def __init__(self):
+		self.completedMaze = False
+
 		self.color = (60, 60, 195)
 		self.width = 1 / 4
 		self.outline = 4 / 5
@@ -102,6 +104,8 @@ class define_Character():
 			if checkNegative[0][2] + self.mazePosition[0] < 0:
 				checkNegative[0][2] += Grid.mazeSize
 				checkNegative[0][1] -= 1
+			if self.gridPosition[0] + checkNegative[0][1] < 0:
+				break
 			Maze = Grid.grid[self.gridPosition[1]][self.gridPosition[0] + checkNegative[0][1]]
 			if Maze == None:
 				break
@@ -116,10 +120,12 @@ class define_Character():
 			if checkPositive[0][2] + self.mazePosition[0] == Grid.mazeSize:
 				checkPositive[0][2] -= Grid.mazeSize
 				checkPositive[0][1] += 1
+			if self.gridPosition[0] + checkPositive[0][1] > Grid.gridSize - 1:
+				break
 			Maze = Grid.grid[self.gridPosition[1]][self.gridPosition[0] + checkPositive[0][1]]
-			mazeBox = Maze.maze[self.mazePosition[1]][self.mazePosition[0] + checkPositive[0][2]]
 			if Maze == None:
 				break
+			mazeBox = Maze.maze[self.mazePosition[1]][self.mazePosition[0] + checkPositive[0][2]]
 			if mazeBox[2] == 1:
 				checkPositive[0][0] = False
 				break
@@ -130,6 +136,8 @@ class define_Character():
 			if checkNegative[1][2] + self.mazePosition[1] < 0:
 				checkNegative[1][2] += Grid.mazeSize
 				checkNegative[1][1] -= 1
+			if self.gridPosition[1] + checkNegative[1][1] < 0:
+				break
 			Maze = Grid.grid[self.gridPosition[1] + checkNegative[1][1]][self.gridPosition[0]]
 			if Maze == None:
 				break
@@ -144,6 +152,8 @@ class define_Character():
 			if checkPositive[1][2] + self.mazePosition[1] == Grid.mazeSize:
 				checkPositive[1][2] -= Grid.mazeSize
 				checkPositive[1][1] += 1
+			if self.gridPosition[1] + checkPositive[1][1] > Grid.gridSize - 1:
+				break
 			Maze = Grid.grid[self.gridPosition[1] + checkPositive[1][1]][self.gridPosition[0]]
 			if Maze == None:
 				break
@@ -155,6 +165,18 @@ class define_Character():
 
 	def update_gridPosition(self):
 		self.gridPosition = [round(Grid.gridSize / 2) + round(self.position[0] / Grid.mazeSize), round(Grid.gridSize / 2) + round(self.position[1] / Grid.mazeSize)]
+		if self.gridPosition[0] <= -1:
+			self.completedMaze = True
+			return
+		if self.gridPosition[0] >= Grid.gridSize:
+			self.completedMaze = True
+			return
+		if self.gridPosition[1] <= -1:
+			self.completedMaze = True
+			return
+		if self.gridPosition[1] >= Grid.gridSize:
+			self.completedMaze = True
+			return
 		currentgridPosition = [self.gridPosition[0] - self.startgridPosition[0], self.gridPosition[1] - self.startgridPosition[1]]
 		xmazePosition = round(Grid.mazeSize / 2) + round(self.position[0] / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize
 		ymazePosition = round(Grid.mazeSize / 2) + round(self.position[1] / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize
@@ -176,7 +198,8 @@ class define_Character():
 		self.position[1] += self.velocity[1]
 		self.update_camera()
 		self.update_velocity()
-		self.update_gridPosition()
-		self.hit_mazeWall()
+		if self.completedMaze == False:
+			self.update_gridPosition()
+			self.hit_mazeWall()
 
 Character = define_Character()

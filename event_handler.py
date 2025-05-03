@@ -42,4 +42,5 @@ def event_handler():
 		if event.type == pygame.QUIT:
 			User.playing = False
 	
-	Character.move_character()
+	if Character.completedMaze == False:
+		Character.move_character()
