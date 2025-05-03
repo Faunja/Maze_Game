@@ -12,9 +12,9 @@ class define_Character():
 		self.outline = 4 / 5
 
 		self.position = [0, 0]
-		self.startgridPosition = [round(Grid.gridSize / 2), round(Grid.gridSize / 2)]
+		self.startgridPosition = [int(Grid.gridSize / 2), int(Grid.gridSize / 2)]
 		self.gridPosition = self.startgridPosition
-		self.mazePosition = [round(Grid.mazeSize / 2), round(Grid.mazeSize / 2)]
+		self.mazePosition = [int(Grid.mazeSize / 2), int(Grid.mazeSize / 2)]
 		self.currentPositions = [[self.gridPosition, self.mazePosition]]
 		self.oldPositions = []
 		self.storedPositions = []
@@ -178,8 +178,8 @@ class define_Character():
 			self.completedMaze = True
 			return
 		currentgridPosition = [self.gridPosition[0] - self.startgridPosition[0], self.gridPosition[1] - self.startgridPosition[1]]
-		xmazePosition = round(Grid.mazeSize / 2) + round(self.position[0] / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize
-		ymazePosition = round(Grid.mazeSize / 2) + round(self.position[1] / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize
+		xmazePosition = int(Grid.mazeSize / 2) + round(self.position[0] / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize
+		ymazePosition = int(Grid.mazeSize / 2) + round(self.position[1] / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize
 		self.mazePosition = [xmazePosition, ymazePosition]
 		if self.mazePosition[0] <= -1:
 			self.mazePosition[0] = 0
