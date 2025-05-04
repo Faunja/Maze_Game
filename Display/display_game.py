@@ -7,7 +7,7 @@ from Grid.define_map import Map
 from Grid.define_grid import Grid
 
 def print_text(text, position, color = (255, 255, 255)):
-	printed = Display.font.render(text, True, color)
+	printed = User.font.render(text, True, color)
 	printed_width, printed_height = printed.get_size()
 	if Character.completedMaze == False:
 		User.Display.blit(printed, (position[0] * printed_width, position[1] * printed_height))

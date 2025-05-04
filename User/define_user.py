@@ -19,6 +19,9 @@ class define_User:
 			self.Display = pygame.display.set_mode((DisplayWidth, DisplayHeight), pygame.RESIZABLE)
 		else:
 			self.Display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-		self.font = pygame.font.Font('Display/Fonts/m6x11.ttf', round(DisplayHeight / 32))
+		if DisplayHeight < DisplayWidth:
+			self.font = pygame.font.Font('Display/Fonts/m6x11.ttf', round(DisplayHeight / 32))
+		else:
+			self.font = pygame.font.Font('Display/Fonts/m6x11.ttf', round(DisplayWidth / 32))
 
 User = define_User()
