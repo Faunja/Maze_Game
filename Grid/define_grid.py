@@ -5,13 +5,13 @@ from Grid.define_maze import define_Maze
 
 class define_Grid:
 	def __init__(self, gridSize):
-		self.mazeSize = 9
+		self.gridSize = gridSize
+		self.mazeSize = 15
+		self.displaymazeSize = 9
 		self.boxSize = 1
-		self.wallWidth = self.mazeSize / 172
+		self.wallWidth = self.displaymazeSize / 172
 		if self.wallWidth < 1:
 			self.allWidth = 1
-		
-		self.gridSize = gridSize
 		self.grid = []
 		for row in range(self.gridSize):
 			self.grid.append([])
@@ -83,11 +83,13 @@ class define_Grid:
 		for y in range(-1, 2):
 			if position[1] + y < 0 or position[1] + y > self.gridSize - 1:
 				continue
-			for x in range(-1, 2):
-				if position[0] + x < 0 or position[0] + x > self.gridSize - 1:
-					continue
-				if self.grid[position[1] + y][position[0] + x] == None:
-					return [position[0] + x, position[1] + y]
+			if self.grid[position[1] + y][position[0]] == None:
+				return [position[0], position[1] + y]
+		for x in range(-1, 2, 2):
+			if position[0] + x < 0 or position[0] + x > self.gridSize - 1:
+				continue
+			if self.grid[position[1]][position[0] + x] == None:
+				return [position[0] + x, position[1]]
 		return True
 
 	def update_chunks(self, position):

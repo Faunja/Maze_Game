@@ -30,7 +30,7 @@ class define_Character():
 		self.stillFriction = .8
 		self.movingFriction = .9
 
-		self.differenceLimit = [Grid.mazeSize / 4, Grid.mazeSize / 4]
+		self.differenceLimit = [Grid.displaymazeSize / 4, Grid.displaymazeSize / 4]
 		self.cameraMoving = False
 		self.cameraPosition = [0, 0]
 		self.cameraVelocity = 1 / 20
@@ -59,7 +59,7 @@ class define_Character():
 		if self.cameraMoving == True:
 			self.cameraPosition[0] += (self.position[0] - self.cameraPosition[0]) * self.cameraVelocity
 			self.cameraPosition[1] += (self.position[1] - self.cameraPosition[1]) * self.cameraVelocity
-		if round(self.cameraPosition[0], 3) == round(self.position[0], 3) and round(self.cameraPosition[1], 3) == round(self.position[1], 3):
+		if round(self.cameraPosition[0], int(Grid.mazeSize / 3)) == round(self.position[0], int(Grid.mazeSize / 3)) and round(self.cameraPosition[1], int(Grid.mazeSize / 3)) == round(self.position[1], int(Grid.mazeSize / 3)):
 			self.cameraMoving = False
 
 	def hit_mazeWall(self):
