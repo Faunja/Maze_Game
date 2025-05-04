@@ -17,7 +17,8 @@ class define_Grid:
 				self.displayChunk += 1
 		self.wallWidth = (9 / self.displaymazeSize) / 20
 		
-		self.mapdisplaymazeSize = 31
+		self.defualtmapSize = 31
+		self.mapdisplaymazeSize = self.defualtmapSize
 		if self.mapdisplaymazeSize < self.mazeSize:
 			self.mapdisplayChunk = 3
 		else:

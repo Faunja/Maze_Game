@@ -63,12 +63,15 @@ def event_handler():
 				if event.key in Controls.moveRight and Map.movement[0] == 1:
 					Map.movement[0] = 0
 
-		if event.type == pygame.MOUSEBUTTONDOWN:
-			if event.button == 1:
-				Map.grabbedMap = True
-		if event.type == pygame.MOUSEBUTTONUP:
-			if event.button == 1:
-				Map.grabbedMap = False
+		if Map.displayMap:
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if event.button == 1:
+					Map.grabbedMap = True
+			if event.type == pygame.MOUSEBUTTONUP:
+				if event.button == 1:
+					Map.grabbedMap = False
+			if event.type == pygame.MOUSEWHEEL:
+				Map.update_mapSize(-event.y)
 
 		if event.type == pygame.VIDEORESIZE:
 			width, height = event.size

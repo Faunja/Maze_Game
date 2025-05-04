@@ -23,9 +23,13 @@ def display_stats():
 	print_text(f'{User.clock.get_fps() :.1f}', [0, 0], (60, 255, 60))
 
 def display_character():
-	displayWidth = Character.width * Display.tileSize
+	if Map.displayMap == False:
+		displayWidth = Character.width * Display.tileSize
+		position = [(Character.position[0] - Character.cameraPosition[0]) * Display.tileSize + Display.CenterDisplay[0], (Character.position[1] - Character.cameraPosition[1]) * Display.tileSize + Display.CenterDisplay[1]]
+	else:
+		displayWidth = Character.width * Display.maptileSize
+		position = [(Character.position[0] - Map.mapPosition[0]) * Display.maptileSize + Display.CenterDisplay[0], (Character.position[1] - Map.mapPosition[1]) * Display.maptileSize + Display.CenterDisplay[1]]
 	displayOutlineWidth = displayWidth * Character.outline
-	position = [(Character.position[0] - Character.cameraPosition[0]) * Display.tileSize + Display.CenterDisplay[0], (Character.position[1] - Character.cameraPosition[1]) * Display.tileSize + Display.CenterDisplay[1]]
 	outlineRect = (round(position[0] - displayWidth / 2), round(position[1] - displayWidth / 2), displayWidth, displayWidth)
 	pygame.draw.rect(Display.Display,  Display.wallColor, outlineRect)
 	innerRect = (round(position[0] - displayOutlineWidth / 2), round(position[1] - displayOutlineWidth / 2), displayOutlineWidth, displayOutlineWidth)
@@ -102,9 +106,9 @@ def display_game():
 	if Character.completedMaze == False:
 		if Map.displayMap == False:
 			display_grid()
-			display_character()
 		else:
 			display_map()
+		display_character()
 		if Display.displayStats == 1:
 			display_stats()
 	else:

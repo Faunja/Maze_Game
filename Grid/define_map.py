@@ -173,6 +173,22 @@ class define_Map:
 		if mousePosition[0] < 0 or mousePosition[0] > Display.DisplayWidth or mousePosition[1] < 0 or mousePosition[1] > Display.DisplayWidth:
 			self.grabbedMap = False
 
+	def update_mapSize(self, direction):
+		Grid.mapdisplaymazeSize += 2 * direction
+		if Grid.mapdisplaymazeSize < Grid.displaymazeSize:
+			Grid.mapdisplaymazeSize = Grid.displaymazeSize
+		if Grid.mapdisplaymazeSize > Grid.defualtmapSize * 3:
+			Grid.mapdisplaymazeSize = Grid.defualtmapSize * 3
+
+		if Grid.mapdisplaymazeSize < Grid.mazeSize:
+			Grid.mapdisplayChunk = 3
+		else:
+			Grid.mapdisplayChunk = int(Grid.mapdisplaymazeSize / Grid.mazeSize * 3)
+			if Grid.mapdisplayChunk % 2 == 0:
+				Grid.mapdisplayChunk += 1
+		Grid.mapwallWidth = (9 / Grid.mapdisplaymazeSize) / 20
+		Display.maptileSize = Display.DisplayHeight / Grid.mapdisplaymazeSize
+
 	def update_map(self):
 		self.update_oldPositions()
 		self.update_currentPosition()
