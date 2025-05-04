@@ -1,3 +1,4 @@
+import os, pickle
 from User.define_user import User
 from Grid.define_grid import Grid
 
@@ -116,4 +117,8 @@ class define_Character():
 			self.update_gridPosition()
 			self.hit_mazeWall()
 
-Character = define_Character()
+if os.path.exists('Save_data/Character.pkl'):
+	with open('Save_data/Character.pkl', 'rb') as file:
+		Character = pickle.load(file)
+else:
+	Character = define_Character()

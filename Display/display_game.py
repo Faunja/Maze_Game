@@ -10,9 +10,9 @@ def print_text(text, position, color = (255, 255, 255)):
 	printed = Display.font.render(text, True, color)
 	printed_width, printed_height = printed.get_size()
 	if Character.completedMaze == False:
-		Display.Display.blit(printed, (position[0] * printed_width, position[1] * printed_height))
+		User.Display.blit(printed, (position[0] * printed_width, position[1] * printed_height))
 	else:
-		Display.Display.blit(printed, (position[0] - printed_width / 2, position[1]))
+		User.Display.blit(printed, (position[0] - printed_width / 2, position[1]))
 
 def display_stats():
 	print_text("("+str(Character.gridPosition[0])+", "+str(Character.gridPosition[1])+")", [0, 1], (120, 120, 255))
@@ -31,21 +31,21 @@ def display_character():
 		position = [(Character.position[0] - Map.mapPosition[0]) * Display.maptileSize + Display.CenterDisplay[0], (Character.position[1] - Map.mapPosition[1]) * Display.maptileSize + Display.CenterDisplay[1]]
 	displayOutlineWidth = displayWidth * Character.outline
 	outlineRect = (round(position[0] - displayWidth / 2), round(position[1] - displayWidth / 2), displayWidth, displayWidth)
-	pygame.draw.rect(Display.Display,  Display.wallColor, outlineRect)
+	pygame.draw.rect(User.Display,  Display.wallColor, outlineRect)
 	innerRect = (round(position[0] - displayOutlineWidth / 2), round(position[1] - displayOutlineWidth / 2), displayOutlineWidth, displayOutlineWidth)
-	pygame.draw.rect(Display.Display,  Character.color, innerRect)
+	pygame.draw.rect(User.Display,  Character.color, innerRect)
 
 def display_box(box, position, tilesize, color):
 	displayboxSize = Grid.boxSize * tilesize
 	displaywallWidth = round(Grid.wallWidth * tilesize)
 	if box[0] == 1:
-		pygame.draw.line(Display.Display, color, (position[0], position[1] + displayboxSize), (position[0] + displayboxSize, position[1] + displayboxSize), displaywallWidth)
+		pygame.draw.line(User.Display, color, (position[0], position[1] + displayboxSize), (position[0] + displayboxSize, position[1] + displayboxSize), displaywallWidth)
 	if box[1] == 1:
-		pygame.draw.line(Display.Display, color, (position[0], position[1]), (position[0] + displayboxSize, position[1]), displaywallWidth)
+		pygame.draw.line(User.Display, color, (position[0], position[1]), (position[0] + displayboxSize, position[1]), displaywallWidth)
 	if box[2] == 1:
-		pygame.draw.line(Display.Display, color, (position[0], position[1]), (position[0], position[1] + displayboxSize), displaywallWidth)
+		pygame.draw.line(User.Display, color, (position[0], position[1]), (position[0], position[1] + displayboxSize), displaywallWidth)
 	if box[3] == 1:
-		pygame.draw.line(Display.Display, color, (position[0] + displayboxSize, position[1]), (position[0] + displayboxSize, position[1] + displayboxSize), displaywallWidth)
+		pygame.draw.line(User.Display, color, (position[0] + displayboxSize, position[1]), (position[0] + displayboxSize, position[1] + displayboxSize), displaywallWidth)
 
 def display_grid():
 	displayPosition = [Character.cameraPosition[0] * Display.tileSize, Character.cameraPosition[1] * Display.tileSize]
@@ -102,7 +102,7 @@ def display_map():
 				display_box(Maze.maze[box[1]][box[0]], [xOffset, yOffset], Display.maptileSize, Display.wallColor)
 
 def display_game():
-	pygame.draw.rect(Display.Display, Display.floorColor, (0, 0, Display.DisplayWidth, Display.DisplayHeight))
+	pygame.draw.rect(User.Display, Display.floorColor, (0, 0, Display.DisplayWidth, Display.DisplayHeight))
 	if Character.completedMaze == False:
 		if Map.displayMap == False:
 			display_grid()
@@ -112,6 +112,6 @@ def display_game():
 		if Display.displayStats == 1:
 			display_stats()
 	else:
-		pygame.draw.rect(Display.Display, Display.floorColor, (0, 0, Display.DisplayWidth, Display.DisplayHeight))
+		pygame.draw.rect(User.Display, Display.floorColor, (0, 0, Display.DisplayWidth, Display.DisplayHeight))
 		print_text("Good Job.", [Display.DisplayWidth / 2, Display.DisplayHeight / 2], Display.wallColor)
 	

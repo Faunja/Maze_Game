@@ -1,4 +1,4 @@
-import pygame
+import pygame, os, pickle
 from pygame.locals import *
 from User.define_user import User
 from Display.define_display import Display
@@ -199,4 +199,8 @@ class define_Map:
 		else:
 			self.update_position()
 
-Map = define_Map()
+if os.path.exists('Save_data/Map.pkl'):
+	with open('Save_data/Map.pkl', 'rb') as file:
+		Map = pickle.load(file)
+else:
+	Map = define_Map()

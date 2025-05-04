@@ -1,10 +1,10 @@
-import random, copy
+import random, os, pickle
 from User.define_user import User
 from Grid.define_maze import define_Maze
 
 class define_Grid:
-	def __init__(self, gridSize):
-		self.gridSize = gridSize
+	def __init__(self):	
+		self.gridSize = 101
 		self.mazeSize = 15
 		self.boxSize = 1
 
@@ -114,4 +114,8 @@ class define_Grid:
 			self.cut_chunkWalls([goodChunks[0], goodChunks[1]])
 			goodChunks = self.check_emptyChunks(position)
 
-Grid = define_Grid(101)
+if os.path.exists('Save_data/Grid.pkl'):
+	with open('Save_data/Grid.pkl', 'rb') as file:
+		Grid = pickle.load(file)
+else:
+	Grid = define_Grid()

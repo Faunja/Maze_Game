@@ -1,4 +1,4 @@
-import pygame, time
+import pygame, os, pickle
 from pygame.locals import *
 from User.define_user import User
 from Grid.define_grid import Grid
@@ -13,8 +13,6 @@ class define_Display:
 		self.ScreenOffset[1] = 0
 		self.ScreenOffset[0] = round((self.DisplayWidth - self.DisplayHeight) / 2)
 		self.CenterDisplay = [round(self.DisplayWidth / 2), round(self.DisplayHeight / 2)]
-		self.Display = pygame.display.set_mode((self.DisplayWidth, self.DisplayHeight), pygame.RESIZABLE)
-		self.font = pygame.font.Font('Display/Fonts/m6x11.ttf', round(self.DisplayHeight / 32))
 
 		self.displayStats = 0
 		self.nightTime = 1
@@ -27,6 +25,7 @@ class define_Display:
 		self.memorywallColor = self.memorywallColors[self.nightTime]
 		self.floorColors = [(255, 255, 255), (0, 0, 0)]
 		self.floorColor = self.floorColors[self.nightTime]
+		User.update_display(self.DisplayWidth, self.DisplayHeight, self.fullscreen)
 	
 	def change_displaySize(self, newWidth, newHeight):
 		self.DisplayWidth = newWidth
@@ -42,16 +41,13 @@ class define_Display:
 			self.tileSize = self.DisplayWidth / Grid.displaymazeSize
 			self.maptileSize = self.DisplayWidth / Grid.mapdisplaymazeSize
 		self.CenterDisplay = [round(self.DisplayWidth / 2), round(self.DisplayHeight / 2)]
-		self.font = pygame.font.Font('Display/Fonts/m6x11.ttf', round(self.DisplayHeight / 32))
 	
 	def toggle_fullscreen(self):
 		if self.fullscreen == False:
 			self.fullscreen = True
-			self.Display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-			self.change_displaySize(User.ScreenSize[0], User.ScreenSize[1])
 		else:
 			self.fullscreen = False
-			self.Display = pygame.display.set_mode((self.DisplayWidth, self.DisplayHeight), pygame.RESIZABLE)
+		User.update_display(self.DisplayWidth, self.DisplayHeight, self.fullscreen)
 	
 	def change_time(self):
 		self.nightTime = 1 - self.nightTime
@@ -59,4 +55,9 @@ class define_Display:
 		self.memorywallColor = self.memorywallColors[self.nightTime]
 		self.floorColor = self.floorColors[self.nightTime]
 
-Display = define_Display()
+if os.path.exists('Save_data/Display.pkl'):
+	with open('Save_data/Display.pkl', 'rb') as file:
+		Display = pickle.load(file)
+		User.update_display(Display.DisplayWidth, Display.DisplayHeight, Display.fullscreen)
+else:
+	Display = define_Display()
