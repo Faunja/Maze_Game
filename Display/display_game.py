@@ -3,6 +3,7 @@ from pygame.locals import *
 from User.define_user import User
 from Display.define_display import Display
 from User.define_character import Character
+from Grid.define_map import Map
 from Grid.define_grid import Grid
 
 def print_text(text, position, color = (255, 255, 255)):
@@ -42,45 +43,19 @@ def display_box(box, position, color):
 	if box[3] == 1:
 		pygame.draw.line(Display.Display, color, (position[0] + displayboxSize, position[1]), (position[0] + displayboxSize, position[1] + displayboxSize), displaywallWidth)
 
-def draw_maze(Maze, offset, color):
-	displayboxSize = Grid.boxSize * Display.tileSize
-	tileOffset = int((Grid.displaymazeSize - Grid.mazeSize) * displayboxSize / 2)
-	for row in range(len(Maze.maze)):
-		yPosition = row * displayboxSize - offset[1] + Display.ScreenOffset[1] + tileOffset
-		if -displayboxSize > yPosition or Display.DisplayHeight < yPosition:
-			continue
-		for column in range(len(Maze.maze)):
-			xPosition = column * displayboxSize - offset[0] + Display.ScreenOffset[0] + tileOffset
-			if -displayboxSize > xPosition or Display.DisplayWidth < xPosition:
-				continue
-			display_box(Maze.maze[row][column], (xPosition, yPosition), color)
-
-def display_grid():
-	displaycameraPosition = [Character.cameraPosition[0] * Display.tileSize, Character.cameraPosition[1] * Display.tileSize]
-	displayboxSize = Grid.boxSize * Display.tileSize
-	for x in range(-1, 2):
-		if Character.gridPosition[1] + y < 0 or Character.gridPosition[1] + y > Grid.gridSize - 1:
-			continue
-		for y in range(-1, 2):
-			if Character.gridPosition[0] + x < 0 or Character.gridPosition[0] + x > Grid.gridSize - 1:
-				continue
-			xOffset = displaycameraPosition[0] + x * displayboxSize * Grid.mazeSize - (Character.gridPosition[0] - round(Grid.gridSize / 2)) * Grid.mazeSize * displayboxSize + Display.ScreenOffset[0]
-			yOffset = displaycameraPosition[1] + y * displayboxSize * Grid.mazeSize - (Character.gridPosition[1] - round(Grid.gridSize / 2)) * Grid.mazeSize * displayboxSize + Display.ScreenOffset[1]
-			draw_maze(Grid.grid[Character.gridPosition[1] + y][Character.gridPosition[0] + x], [xOffset, yOffset], Display.wallColor)
-
 def display_memoryGrid():
 	displaycameraPosition = [Character.cameraPosition[0] * Display.tileSize, Character.cameraPosition[1] * Display.tileSize]
 	displayboxSize = Grid.boxSize * Display.tileSize
 	tileOffset = int((Grid.displaymazeSize - Grid.mazeSize) * displayboxSize / 2)
-	for y in range(-1, 2):
+	for y in range(Grid.displayChunk - int(Grid.displayChunk / 2) - Grid.displayChunk, Grid.displayChunk - int(Grid.displayChunk / 2)):
 		yPosition = Character.gridPosition[1] + y
 		if yPosition < 0 or yPosition > Grid.gridSize - 1:
 			continue
-		for x in range(-1, 2):
+		for x in range(Grid.displayChunk - int(Grid.displayChunk / 2) - Grid.displayChunk, Grid.displayChunk - int(Grid.displayChunk / 2)):
 			xPosition = Character.gridPosition[0] + x
 			if xPosition < 0 or xPosition > Grid.gridSize - 1:
 				continue
-			for box in Character.storedPositions[yPosition][xPosition]:
+			for box in Map.storedPositions[yPosition][xPosition]:
 				Maze = Grid.grid[Character.gridPosition[1] + y][Character.gridPosition[0] + x]
 				xOffset = box[0] * displayboxSize - (displaycameraPosition[0] - (xPosition - Character.startgridPosition[0]) * Grid.mazeSize * displayboxSize) + Display.ScreenOffset[0] + tileOffset
 				if xOffset < -displayboxSize or xOffset > Display.DisplayWidth + displayboxSize:
@@ -90,7 +65,7 @@ def display_memoryGrid():
 					continue
 				display_box(Maze.maze[box[1]][box[0]], [xOffset, yOffset], Display.memorywallColor)
 
-	for currentPosition in Character.currentPositions:
+	for currentPosition in Map.currentPositions:
 		Maze = Grid.grid[currentPosition[0][1]][currentPosition[0][0]]
 		xOffset = currentPosition[1][0] * displayboxSize - (displaycameraPosition[0] - (currentPosition[0][0] - Character.startgridPosition[0]) * Grid.mazeSize * displayboxSize) + Display.ScreenOffset[0] + tileOffset
 		if xOffset < -displayboxSize or xOffset > Display.DisplayWidth + displayboxSize:

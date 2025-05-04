@@ -3,6 +3,7 @@ from pygame.locals import *
 from User.define_user import User
 from User.define_controls import Controls
 from User.define_character import Character
+from Grid.define_map import Map
 from Display.define_display import Display
 
 def event_handler():
@@ -44,3 +45,4 @@ def event_handler():
 	
 	if Character.completedMaze == False:
 		Character.move_character()
+		Map.update_map()

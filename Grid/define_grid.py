@@ -1,5 +1,4 @@
-import pygame, random, copy
-from pygame.locals import *
+import random, copy
 from User.define_user import User
 from Grid.define_maze import define_Maze
 
@@ -7,11 +6,26 @@ class define_Grid:
 	def __init__(self, gridSize):
 		self.gridSize = gridSize
 		self.mazeSize = 15
-		self.displaymazeSize = 9
 		self.boxSize = 1
-		self.wallWidth = self.displaymazeSize / 172
-		if self.wallWidth < 1:
-			self.allWidth = 1
+
+		self.displaymazeSize = 9
+		if self.displaymazeSize < self.mazeSize:
+			self.displayChunk = 3
+		else:
+			self.displayChunk = int(self.displaymazeSize / self.mazeSize * 3)
+			if self.displayChunk % 2 == 0:
+				self.displayChunk += 1
+		self.wallWidth = (9 / self.displaymazeSize) / 20
+		
+		self.mapdisplaymazeSize = 31
+		if self.mapdisplaymazeSize < self.mazeSize:
+			self.mapdisplayChunk = 3
+		else:
+			self.mapdisplayChunk = int(self.mapdisplaymazeSize / self.mazeSize * 3)
+			if self.mapdisplayChunk % 2 == 0:
+				self.mapdisplayChunk += 1
+		self.mapwallWidth = (9 / self.mapdisplaymazeSize) / 20
+
 		self.grid = []
 		for row in range(self.gridSize):
 			self.grid.append([])
@@ -80,12 +94,12 @@ class define_Grid:
 			Maze[exitPosition][self.mazeSize - 1][3] = 0
 		
 	def check_emptyChunks(self, position):
-		for y in range(-1, 2):
+		for y in range(self.displayChunk - int(self.displayChunk / 2) - self.displayChunk, self.displayChunk - int(self.displayChunk / 2)):
 			if position[1] + y < 0 or position[1] + y > self.gridSize - 1:
 				continue
 			if self.grid[position[1] + y][position[0]] == None:
 				return [position[0], position[1] + y]
-		for x in range(-1, 2, 2):
+		for x in range(self.displayChunk - int(self.displayChunk / 2) - self.displayChunk, self.displayChunk - int(self.displayChunk / 2)):
 			if position[0] + x < 0 or position[0] + x > self.gridSize - 1:
 				continue
 			if self.grid[position[1]][position[0] + x] == None:
