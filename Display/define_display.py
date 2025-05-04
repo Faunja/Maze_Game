@@ -45,8 +45,10 @@ class define_Display:
 	def toggle_fullscreen(self):
 		if self.fullscreen == False:
 			self.fullscreen = True
+			self.change_displaySize(User.ScreenSize[0], User.ScreenSize[1])
 		else:
 			self.fullscreen = False
+			self.change_displaySize(round(User.ScreenSize[0] * self.displayDifference), round(User.ScreenSize[1] * self.displayDifference))
 		User.update_display(self.DisplayWidth, self.DisplayHeight, self.fullscreen)
 	
 	def change_time(self):
