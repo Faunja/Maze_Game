@@ -20,7 +20,6 @@ class define_Map:
 		self.oldmousePosition = None
 		self.mapPosition = Character.cameraPosition.copy()
 		self.gridPosition = Character.gridPosition.copy()
-		self.mazePosition = Character.mazePosition.copy()
 
 		self.movement = [0, 0]
 		self.mapVelocity = [False, False]
@@ -137,18 +136,6 @@ class define_Map:
 			self.gridPosition[1] = 0
 		if self.gridPosition[1] >= Grid.gridSize:
 			self.gridPosition[1] = Grid.gridSize - 1
-		currentgridPosition = [self.gridPosition[0] - Character.startgridPosition[0], self.gridPosition[1] - Character.startgridPosition[1]]
-		xmazePosition = int(Grid.mazeSize / 2) + round(self.mapPosition[0] / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize
-		ymazePosition = int(Grid.mazeSize / 2) + round(self.mapPosition[1] / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize
-		self.mazePosition = [xmazePosition, ymazePosition]
-		if self.mazePosition[0] <= -1:
-			self.mazePosition[0] = 0
-		if self.mazePosition[0] >= Grid.mazeSize:
-			self.mazePosition[0] = Grid.mazeSize - 1
-		if self.mazePosition[1] <= -1:
-			self.mazePosition[1] = 0
-		if self.mazePosition[1] >= Grid.mazeSize:
-			self.mazePosition[1] = Grid.mazeSize - 1
 
 	def update_position(self):
 		if self.grabbedMap == False:
@@ -195,9 +182,9 @@ class define_Map:
 		if self.displayMap == False:
 			self.mapPosition = Character.cameraPosition.copy()
 			self.gridPosition = Character.gridPosition.copy()
-			self.mazePosition = Character.mazePosition.copy()
 		else:
 			self.update_position()
+			self.update_gridPosition()
 
 if os.path.exists('Save_data/Map.pkl'):
 	with open('Save_data/Map.pkl', 'rb') as file:
