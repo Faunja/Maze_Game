@@ -6,15 +6,25 @@ from User.define_character import Character
 from Grid.define_grid import Grid
 
 class define_Map:
+	def load_map(self):
+		with open('Save_data/Map.pkl', 'rb') as file:
+			reference = pickle.load(file)
+			self.oldPositions = reference.oldPositions
+			self.storedPositions = reference.storedPositions
+	
 	def __init__(self):
-		self.currentPositions = [[Character.gridPosition, Character.mazePosition]]
-		self.oldPositions = []
-		self.storedPositions = []
-		for row in range(Grid.gridSize):
-			self.storedPositions.append([])
-			for column in range(Grid.gridSize):
-				self.storedPositions[row].append([])
-
+		if os.path.exists('Save_data/Map.pkl'):
+			self.load_map()
+		else:
+			self.oldPositions = []
+			self.storedPositions = []
+			for row in range(Grid.gridSize):
+				self.storedPositions.append([])
+				for column in range(Grid.gridSize):
+					self.storedPositions[row].append([])
+		
+		self.currentPositions = [[Character.gridPosition.copy(), Character.mazePosition.copy()]]
+		
 		self.displayMap = False
 		self.grabbedMap = False
 		self.oldmousePosition = None
@@ -186,8 +196,4 @@ class define_Map:
 			self.update_position()
 			self.update_gridPosition()
 
-if os.path.exists('Save_data/Map.pkl'):
-	with open('Save_data/Map.pkl', 'rb') as file:
-		Map = pickle.load(file)
-else:
-	Map = define_Map()
+Map = define_Map()

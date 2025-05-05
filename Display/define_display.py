@@ -4,21 +4,41 @@ from User.define_user import User
 from Grid.define_grid import Grid
 
 class define_Display:
-	def __init__(self):
-		self.fullscreen = False
-		self.displayDifference = 4 / 5
-		self.DisplayWidth = round(User.ScreenSize[0] * self.displayDifference)
-		self.DisplayHeight = round(User.ScreenSize[1] * self.displayDifference)
-		self.ScreenOffset = [0, 0]
-		self.ScreenOffset[1] = 0
-		self.ScreenOffset[0] = round((self.DisplayWidth - self.DisplayHeight) / 2)
-		self.CenterDisplay = [round(self.DisplayWidth / 2), round(self.DisplayHeight / 2)]
+	def load_display(self):
+		with open('Save_data/Display.pkl', 'rb') as file:
+			reference = pickle.load(file)
+			self.fullscreen = reference.fullscreen
+			self.displayDifference = reference.displayDifference
+			self.DisplayWidth = reference.DisplayWidth
+			self.DisplayHeight = reference.DisplayHeight
+			self.ScreenOffset = reference.ScreenOffset
+			self.CenterDisplay = reference.CenterDisplay
 
-		self.displayStats = 0
-		self.nightTime = 1
-		
-		self.tileSize = self.DisplayHeight / Grid.displaymazeSize
-		self.maptileSize = self.DisplayHeight / Grid.mapdisplaymazeSize
+			self.displayStats = reference.displayStats
+			self.nightTime = reference.nightTime
+			
+			self.tileSize = reference.tileSize
+			self.maptileSize = reference.maptileSize
+
+	def __init__(self):
+		if os.path.exists('Save_data/Display.pkl'):
+			self.load_display()
+		else:
+			self.fullscreen = False
+			self.displayDifference = 4 / 5
+			self.DisplayWidth = round(User.ScreenSize[0] * self.displayDifference)
+			self.DisplayHeight = round(User.ScreenSize[1] * self.displayDifference)
+			self.ScreenOffset = [0, 0]
+			self.ScreenOffset[1] = 0
+			self.ScreenOffset[0] = round((self.DisplayWidth - self.DisplayHeight) / 2)
+			self.CenterDisplay = [round(self.DisplayWidth / 2), round(self.DisplayHeight / 2)]
+
+			self.displayStats = 0
+			self.nightTime = 1
+			
+			self.tileSize = self.DisplayHeight / Grid.displaymazeSize
+			self.maptileSize = self.DisplayHeight / Grid.mapdisplaymazeSize
+
 		self.wallColors = [(0, 0, 0), (255, 255, 255)]
 		self.wallColor = self.wallColors[self.nightTime]
 		self.memorywallColors = [(120, 120, 120), (135, 135, 135)]
@@ -57,9 +77,4 @@ class define_Display:
 		self.memorywallColor = self.memorywallColors[self.nightTime]
 		self.floorColor = self.floorColors[self.nightTime]
 
-if os.path.exists('Save_data/Display.pkl'):
-	with open('Save_data/Display.pkl', 'rb') as file:
-		Display = pickle.load(file)
-		User.update_display(Display.DisplayWidth, Display.DisplayHeight, Display.fullscreen)
-else:
-	Display = define_Display()
+Display = define_Display()

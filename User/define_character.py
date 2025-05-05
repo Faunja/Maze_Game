@@ -3,17 +3,29 @@ from User.define_user import User
 from Grid.define_grid import Grid
 
 class define_Character():
+	def load_character(self):
+		with open('Save_data/Character.pkl', 'rb') as file:
+			reference = pickle.load(file)
+			self.position = reference.position
+			self.cameraPosition = reference.position.copy()
+			self.startgridPosition = reference.startgridPosition
+			self.gridPosition = reference.gridPosition
+			self.mazePosition = reference.mazePosition
+			
 	def __init__(self):
 		self.completedMaze = False
 
 		self.color = (60, 60, 195)
 		self.width = 1 / 4
 		self.outline = 4 / 5
-
-		self.position = [0, 0]
-		self.startgridPosition = [int(Grid.gridSize / 2), int(Grid.gridSize / 2)]
-		self.gridPosition = self.startgridPosition
-		self.mazePosition = [int(Grid.mazeSize / 2), int(Grid.mazeSize / 2)]
+		if os.path.exists('Save_data/Character.pkl'):
+			self.load_character()
+		else:
+			self.position = [0, 0]
+			self.cameraPosition = [0, 0]
+			self.startgridPosition = [int(Grid.gridSize / 2), int(Grid.gridSize / 2)]
+			self.gridPosition = self.startgridPosition
+			self.mazePosition = [int(Grid.mazeSize / 2), int(Grid.mazeSize / 2)]
 
 		self.movement = [0, 0]
 		self.maxVelocity = self.width / 5
@@ -24,7 +36,6 @@ class define_Character():
 
 		self.differenceLimit = [Grid.displaymazeSize / 4, Grid.displaymazeSize / 4]
 		self.cameraMoving = False
-		self.cameraPosition = [0, 0]
 		self.cameraVelocity = 1 / 20
 
 	def update_velocity(self):
@@ -117,8 +128,4 @@ class define_Character():
 			self.update_gridPosition()
 			self.hit_mazeWall()
 
-if os.path.exists('Save_data/Character.pkl'):
-	with open('Save_data/Character.pkl', 'rb') as file:
-		Character = pickle.load(file)
-else:
-	Character = define_Character()
+Character = define_Character()
