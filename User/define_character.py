@@ -6,15 +6,18 @@ class define_Character():
 	def load_character(self):
 		with open('Save_data/Character.pkl', 'rb') as file:
 			reference = pickle.load(file)
-			self.position = reference.position
-			self.cameraPosition = reference.position.copy()
-			self.startgridPosition = reference.startgridPosition
-			self.gridPosition = reference.gridPosition
-			self.mazePosition = reference.mazePosition
-				
-			self.stamina = reference.stamina
-			self.tired = reference.tired
-			self.timePassed = reference.timePassed
+			try:
+				self.position = reference.position
+				self.cameraPosition = reference.position.copy()
+				self.startgridPosition = reference.startgridPosition
+				self.gridPosition = reference.gridPosition
+				self.mazePosition = reference.mazePosition
+					
+				self.stamina = reference.stamina
+				self.tired = reference.tired
+				self.timePassed = reference.timePassed
+			except:
+				pass
 			
 	def __init__(self):
 		self.completedMaze = False

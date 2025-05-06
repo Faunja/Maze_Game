@@ -7,18 +7,21 @@ class define_Display:
 	def load_display(self):
 		with open('Save_data/Display.pkl', 'rb') as file:
 			reference = pickle.load(file)
-			self.fullscreen = reference.fullscreen
-			self.displayDifference = reference.displayDifference
-			self.DisplayWidth = reference.DisplayWidth
-			self.DisplayHeight = reference.DisplayHeight
-			self.ScreenOffset = reference.ScreenOffset
-			self.CenterDisplay = reference.CenterDisplay
+			try:
+				self.fullscreen = reference.fullscreen
+				self.displayDifference = reference.displayDifference
+				self.DisplayWidth = reference.DisplayWidth
+				self.DisplayHeight = reference.DisplayHeight
+				self.ScreenOffset = reference.ScreenOffset
+				self.CenterDisplay = reference.CenterDisplay
 
-			self.displayStats = reference.displayStats
-			self.nightTime = reference.nightTime
-			
-			self.tileSize = reference.tileSize
-			self.maptileSize = reference.maptileSize
+				self.displayStats = reference.displayStats
+				self.nightTime = reference.nightTime
+				
+				self.tileSize = reference.tileSize
+				self.maptileSize = reference.maptileSize
+			except:
+				pass
 
 	def __init__(self):
 		self.fullscreen = False

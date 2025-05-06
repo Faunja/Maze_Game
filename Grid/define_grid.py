@@ -6,20 +6,23 @@ class define_Grid:
 	def load_grid(self):
 		with open('Save_data/Grid.pkl', 'rb') as file:
 			reference = pickle.load(file)
-			self.gridSize = reference.gridSize
-			self.mazeSize = reference.mazeSize
-			self.boxSize = reference.boxSize
+			try:
+				self.gridSize = reference.gridSize
+				self.mazeSize = reference.mazeSize
+				self.boxSize = reference.boxSize
 
-			self.displaymazeSize = reference.displaymazeSize
-			self.displayChunk = reference.displayChunk
-			self.wallWidth = reference.wallWidth
-			
-			self.defualtmapSize = reference.defualtmapSize
-			self.mapdisplaymazeSize = reference.mapdisplaymazeSize
-			self.mapdisplayChunk = reference.mapdisplayChunk
-			self.mapwallWidth = reference.mapwallWidth
+				self.displaymazeSize = reference.displaymazeSize
+				self.displayChunk = reference.displayChunk
+				self.wallWidth = reference.wallWidth
+				
+				self.defualtmapSize = reference.defualtmapSize
+				self.mapdisplaymazeSize = reference.mapdisplaymazeSize
+				self.mapdisplayChunk = reference.mapdisplayChunk
+				self.mapwallWidth = reference.mapwallWidth
 
-			self.grid = reference.grid
+				self.grid = reference.grid
+			except:
+				pass
 	
 	def __init__(self):	
 		if os.path.exists('Save_data/Grid.pkl'):
