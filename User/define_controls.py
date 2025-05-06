@@ -8,6 +8,7 @@ class define_Controls:
 		self.moveUp = [pygame.K_w, pygame.K_UP]
 		self.moveLeft = [pygame.K_a, pygame.K_LEFT]
 		self.moveRight = [pygame.K_d, pygame.K_RIGHT]
+		self.holdRun = [pygame.K_LSHIFT, pygame.K_LCTRL]
 		self.changedisplayMap = [pygame.K_m]
 		self.changeTime = [pygame.K_c]
 

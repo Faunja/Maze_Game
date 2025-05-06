@@ -15,12 +15,13 @@ def print_text(text, position, color = (255, 255, 255)):
 		User.Display.blit(printed, (position[0] - printed_width / 2, position[1]))
 
 def display_stats():
-	print_text("("+str(Character.gridPosition[0])+", "+str(Character.gridPosition[1])+")", [0, 1], (120, 120, 255))
-	print_text("("+str(Character.mazePosition[0])+", "+str(Character.mazePosition[1])+")", [0, 2], (120, 120, 255))
+	print_text("Grid Position: ("+str(Character.gridPosition[0])+", "+str(Character.gridPosition[1])+")", [0, 1], (120, 120, 255))
+	print_text("Maze Position: ("+str(Character.mazePosition[0])+", "+str(Character.mazePosition[1])+")", [0, 2], (120, 120, 255))
+	print_text("Stamina: "+str(round(Character.stamina / Character.maxStamina * 100, 3)), [0, 3], (120, 120, 255))
 	if User.clock.get_fps() < 40:
-		print_text(f'{User.clock.get_fps() :.1f}', [0, 0], (255, 60, 60))
+		print_text("FPS: "+f'{User.clock.get_fps() :.1f}', [0, 0], (255, 60, 60))
 		return
-	print_text(f'{User.clock.get_fps() :.1f}', [0, 0], (60, 255, 60))
+	print_text("FPS: "f'{User.clock.get_fps() :.1f}', [0, 0], (60, 255, 60))
 
 def display_character():
 	if Map.displayMap == False:

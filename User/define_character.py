@@ -15,7 +15,7 @@ class define_Character():
 	def __init__(self):
 		self.completedMaze = False
 
-		self.color = (60, 60, 195)
+		self.color = [60, 60, 195]
 		self.width = 1 / 4
 		self.outline = 4 / 5
 		if os.path.exists('Save_data/Character.pkl'):
@@ -33,14 +33,53 @@ class define_Character():
 		self.speedGain = 1 / 5
 		self.stillFriction = .8
 		self.movingFriction = .9
-
+		
+		self.running = False
+		self.maxStamina = 5 * User.FPS
+		self.runningmaxVelocity = self.maxVelocity * 1.5
+		self.runningspeedGain = self.speedGain * 1.5
+		self.stamina = self.maxStamina
+		self.tired = False
+		self.cooldown = 3 * User.FPS
+		self.timePassed = self.cooldown
+		self.tiredmaxVelocity = self.maxVelocity / 2
+		self.tiredspeedGain = self.speedGain / 2
+		
 		self.differenceLimit = [Grid.displaymazeSize / 4, Grid.displaymazeSize / 4]
 		self.cameraMoving = False
 		self.cameraVelocity = 1 / 20
-
+		
+	def update_running(self):
+		if self.stamina == 0 and self.tired == False:
+			self.running = False
+			self.tired = True
+			self.timePassed = 0
+		if self.tired == False:
+			if not self.running and self.stamina != self.maxStamina:
+				self.stamina += 1
+		else:
+			if self.timePassed != self.cooldown:
+				self.timePassed += 1
+			else:
+				self.stamina += 1
+				self.tired = False
+		if self.running and self.stamina != 0:
+			self.stamina -= 1
+		self.color[0] = 195 - int(135 * (self.stamina / self.maxStamina))
+		self.color[2] = 60 + int(135 * (self.stamina / self.maxStamina))
+	
 	def update_velocity(self):
-		self.velocity[0] += self.maxVelocity * self.speedGain * self.movement[0]
-		self.velocity[1] += self.maxVelocity * self.speedGain * self.movement[1]
+		self.update_running()
+		if self.running:
+			self.velocity[0] += self.runningmaxVelocity * self.runningspeedGain * self.movement[0]
+			self.velocity[1] += self.runningmaxVelocity * self.runningspeedGain * self.movement[1]
+		elif self.tired:
+			self.velocity[0] += self.tiredmaxVelocity * self.tiredspeedGain * self.movement[0]
+			self.velocity[1] += self.tiredmaxVelocity * self.tiredspeedGain * self.movement[1]
+		else:
+			self.velocity[0] += self.maxVelocity * self.speedGain * self.movement[0]
+			self.velocity[1] += self.maxVelocity * self.speedGain * self.movement[1]
+
 		if self.movement[0] != 0:
 			self.velocity[0] *= self.movingFriction
 		else:
@@ -49,10 +88,22 @@ class define_Character():
 			self.velocity[1] *= self.movingFriction
 		else:
 			self.velocity[1] *= self.stillFriction
-		if abs(self.velocity[0]) > self.maxVelocity:
-			self.velocity[0] = abs(self.velocity[0]) / self.velocity[0] * self.maxVelocity
-		if abs(self.velocity[1]) > self.maxVelocity:
-			self.velocity[1] = abs(self.velocity[1]) / self.velocity[1] * self.maxVelocity
+
+		if self.running:
+			if abs(self.velocity[0]) > self.runningmaxVelocity:
+				self.velocity[0] = abs(self.velocity[0]) / self.velocity[0] * self.runningmaxVelocity
+			if abs(self.velocity[1]) > self.runningmaxVelocity:
+				self.velocity[1] = abs(self.velocity[1]) / self.velocity[1] * self.runningmaxVelocity
+		elif self.running:
+			if abs(self.velocity[0]) > self.tiredmaxVelocity:
+				self.velocity[0] = abs(self.velocity[0]) / self.velocity[0] * self.tiredmaxVelocity
+			if abs(self.velocity[1]) > self.tiredmaxVelocity:
+				self.velocity[1] = abs(self.velocity[1]) / self.velocity[1] * self.tiredmaxVelocity
+		else:
+			if abs(self.velocity[0]) > self.maxVelocity:
+				self.velocity[0] = abs(self.velocity[0]) / self.velocity[0] * self.maxVelocity
+			if abs(self.velocity[1]) > self.maxVelocity:
+				self.velocity[1] = abs(self.velocity[1]) / self.velocity[1] * self.maxVelocity
 
 	def update_camera(self):
 		if self.cameraPosition[0] > self.position[0] + self.differenceLimit[0] or self.cameraPosition[0] < self.position[0] - self.differenceLimit[0]:
@@ -119,7 +170,7 @@ class define_Character():
 			self.mazePosition[1] = Grid.mazeSize - 1
 		Grid.update_chunks(self.gridPosition)
 	
-	def move_character(self):
+	def update_character(self):
 		self.position[0] += self.velocity[0]
 		self.position[1] += self.velocity[1]
 		self.update_camera()
