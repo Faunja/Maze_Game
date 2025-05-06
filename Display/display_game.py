@@ -110,7 +110,7 @@ def display_game():
 		else:
 			display_map()
 		display_character()
-		if Display.displayStats == 1:
+		if Display.displayStats:
 			display_stats()
 	else:
 		pygame.draw.rect(User.Display, Display.floorColor, (0, 0, Display.DisplayWidth, Display.DisplayHeight))

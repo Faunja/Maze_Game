@@ -13,16 +13,12 @@ class define_Map:
 			self.storedPositions = reference.storedPositions
 	
 	def __init__(self):
-		if os.path.exists('Save_data/Map.pkl'):
-			self.load_map()
-		else:
-			self.oldPositions = []
-			self.storedPositions = []
-			for row in range(Grid.gridSize):
-				self.storedPositions.append([])
-				for column in range(Grid.gridSize):
-					self.storedPositions[row].append([])
-		
+		self.oldPositions = []
+		self.storedPositions = []
+		for row in range(Grid.gridSize):
+			self.storedPositions.append([])
+			for column in range(Grid.gridSize):
+				self.storedPositions[row].append([])
 		self.currentPositions = [[Character.gridPosition.copy(), Character.mazePosition.copy()]]
 		
 		self.displayMap = False
@@ -38,6 +34,9 @@ class define_Map:
 		self.speedGain = 1 / 5
 		self.stillFriction = .8
 		self.movingFriction = .9
+		
+		if os.path.exists('Save_data/Map.pkl'):
+			self.load_map()
 
 	def update_oldPositions(self):
 		for position in self.currentPositions:

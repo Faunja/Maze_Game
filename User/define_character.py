@@ -11,6 +11,10 @@ class define_Character():
 			self.startgridPosition = reference.startgridPosition
 			self.gridPosition = reference.gridPosition
 			self.mazePosition = reference.mazePosition
+				
+			self.stamina = reference.stamina
+			self.tired = reference.tired
+			self.timePassed = reference.timePassed
 			
 	def __init__(self):
 		self.completedMaze = False
@@ -18,14 +22,11 @@ class define_Character():
 		self.color = [60, 60, 195]
 		self.width = 1 / 4
 		self.outline = 4 / 5
-		if os.path.exists('Save_data/Character.pkl'):
-			self.load_character()
-		else:
-			self.position = [0, 0]
-			self.cameraPosition = [0, 0]
-			self.startgridPosition = [int(Grid.gridSize / 2), int(Grid.gridSize / 2)]
-			self.gridPosition = self.startgridPosition
-			self.mazePosition = [int(Grid.mazeSize / 2), int(Grid.mazeSize / 2)]
+		self.position = [0, 0]
+		self.cameraPosition = [0, 0]
+		self.startgridPosition = [int(Grid.gridSize / 2), int(Grid.gridSize / 2)]
+		self.gridPosition = self.startgridPosition
+		self.mazePosition = [int(Grid.mazeSize / 2), int(Grid.mazeSize / 2)]
 
 		self.movement = [0, 0]
 		self.maxVelocity = self.width / 5
@@ -48,6 +49,9 @@ class define_Character():
 		self.differenceLimit = [Grid.displaymazeSize / 4, Grid.displaymazeSize / 4]
 		self.cameraMoving = False
 		self.cameraVelocity = 1 / 20
+		
+		if os.path.exists('Save_data/Character.pkl'):
+			self.load_character()
 		
 	def update_running(self):
 		if self.stamina == 0 and self.tired == False:
