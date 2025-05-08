@@ -1,4 +1,4 @@
-import os, pickle
+import os, pickle, random
 from User.define_user import User
 from Grid.define_grid import Grid
 
@@ -166,6 +166,17 @@ class define_Character():
 		currentgridPosition = [self.gridPosition[0] - self.startgridPosition[0], self.gridPosition[1] - self.startgridPosition[1]]
 		xmazePosition = int(Grid.mazeSize / 2) + round(self.position[0] / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize
 		ymazePosition = int(Grid.mazeSize / 2) + round(self.position[1] / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize
+		oldxmazePosition = int(Grid.mazeSize / 2) + round((self.position[0] - self.velocity[0]) / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize
+		oldymazePosition = int(Grid.mazeSize / 2) + round((self.position[1] - self.velocity[1]) / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize
+		if xmazePosition != oldxmazePosition and ymazePosition != oldymazePosition:
+			if abs(self.velocity[0]) > abs(self.velocity[1]):
+				ymazePosition = oldymazePosition
+			elif abs(self.velocity[1]) > abs(self.velocity[0]):
+				xmazePosition = oldxmazePosition
+			else:
+				direction = random.randint(0, 1)
+				xmazePosition += (oldxmazePosition - xmazePosition) * direction
+				ymazePosition += (oldymazePosition - ymazePosition) * (1 - direction)
 		self.mazePosition = [xmazePosition, ymazePosition]
 		if self.mazePosition[0] <= -1:
 			self.mazePosition[0] = 0
