@@ -49,7 +49,6 @@ class define_Grid:
 				self.mapdisplayChunk = int(self.mapdisplaymazeSize / self.mazeSize * 3)
 				if self.mapdisplayChunk % 2 == 0:
 					self.mapdisplayChunk += 1
-			self.mapwallWidth = (9 / self.mapdisplaymazeSize) / 20
 
 			self.grid = []
 			for row in range(self.gridSize):
@@ -60,24 +59,105 @@ class define_Grid:
 
 	def cut_chunkWalls(self, position):
 		maze = self.grid[position[1]][position[0]].maze
-		if position[0] % 2 == position[1] % 2:
-			if position[1] != self.gridSize - 1:
-				maze[self.mazeSize - 1][self.mazeSize - 1][0] = 0
-			if position[1] != 0:
-				maze[0][0][1] = 0
-			if position[0] != 0:
-				maze[self.mazeSize - 1][0][2] = 0
-			if position[0] != self.gridSize - 1:
-				maze[0][self.mazeSize - 1][3] = 0
-		else:
-			if position[1] != self.gridSize - 1:
-				maze[self.mazeSize - 1][0][0] = 0
-			if position[1] != 0:
-				maze[0][self.mazeSize - 1][1] = 0
-			if position[0] != 0:
-				maze[0][0][2] = 0
-			if position[0] != self.gridSize - 1:
-				maze[self.mazeSize - 1][self.mazeSize - 1][3] = 0
+		if position[1] != self.gridSize - 1:
+			if self.grid[position[1] + 1][position[0]] != None:
+				sideMaze = self.grid[position[1] + 1][position[0]].maze
+				crossedWalls = [True, True]
+				canCut = True
+				holes = []
+				for col in range(0, self.mazeSize):
+					if col - 1 not in holes:
+						canCut = True
+					if maze[self.mazeSize - 1][col][2] == 1:
+						crossedWalls[0] = True
+					if sideMaze[0][col][2] == 1:
+						crossedWalls[1] = True
+					if canCut == True and False not in crossedWalls:
+						if maze[self.mazeSize - 1][col][0] + maze[self.mazeSize - 1][col][1] + maze[self.mazeSize - 1][col][2] + maze[self.mazeSize - 1][col][3] < 2:
+							continue
+						if sideMaze[0][col][0] + sideMaze[0][col][1] + sideMaze[0][col][2] + sideMaze[0][col][3] < 2:
+							continue
+						holes.append(col)
+						crossedWalls = [False, False]
+						canCut = False
+				for hole in holes:
+					maze[self.mazeSize - 1][hole][0] = 0
+					sideMaze[0][hole][1] = 0
+
+		if position[1] != 0:
+			if self.grid[position[1] - 1][position[0]] != None:
+				sideMaze = self.grid[position[1] - 1][position[0]].maze
+				crossedWalls = [True, True]
+				canCut = True
+				holes = []
+				for col in range(0, self.mazeSize):
+					if col - 1 not in holes:
+						canCut = True
+					if maze[0][col][2] == 1:
+						crossedWalls[0] = True
+					if sideMaze[self.mazeSize - 1][col][2] == 1:
+						crossedWalls[1] = True
+					if canCut == True and False not in crossedWalls:
+						if maze[0][col][0] + maze[0][col][1] + maze[0][col][2] + maze[0][col][3] < 2:
+							continue
+						if sideMaze[self.mazeSize - 1][col][0] + sideMaze[self.mazeSize - 1][col][1] + sideMaze[self.mazeSize - 1][col][2] + sideMaze[self.mazeSize - 1][col][3] < 2:
+							continue
+						holes.append(col)
+						crossedWalls = [False, False]
+						canCut = False
+				for hole in holes:
+					maze[0][hole][1] = 0
+					sideMaze[self.mazeSize - 1][hole][0] = 0
+
+		if position[0] != 0:
+			if self.grid[position[1]][position[0] - 1] != None:
+				sideMaze = self.grid[position[1]][position[0] - 1].maze
+				crossedWalls = [True, True]
+				canCut = True
+				holes = []
+				for row in range(0, self.mazeSize):
+					if row - 1 not in holes:
+						canCut = True
+					if maze[row][0][0] == 1:
+						crossedWalls[0] = True
+					if sideMaze[row][self.mazeSize - 1][0] == 1:
+						crossedWalls[1] = True
+					if canCut == True and False not in crossedWalls:
+						if maze[row][0][0] + maze[row][0][1] + maze[row][0][2] + maze[row][0][3] < 2:
+							continue
+						if sideMaze[row][self.mazeSize - 1][0] + sideMaze[row][self.mazeSize - 1][1] + sideMaze[row][self.mazeSize - 1][2] + sideMaze[row][self.mazeSize - 1][3] < 2:
+							continue
+						holes.append(row)
+						crossedWalls = [False, False]
+						canCut = False
+				for hole in holes:
+					maze[hole][0][2] = 0
+					sideMaze[hole][self.mazeSize - 1][3] = 0
+		
+		if position[0] != self.gridSize - 1:
+			if self.grid[position[1]][position[0] + 1] != None:
+				sideMaze = self.grid[position[1]][position[0] + 1].maze
+				crossedWalls = [True, True]
+				canCut = True
+				holes = []
+				for row in range(0, self.mazeSize):
+					if row - 1 not in holes:
+						canCut = True
+					if maze[row][self.mazeSize - 1][0] == 1:
+						crossedWalls[0] = True
+					if sideMaze[row][0][0] == 1:
+						crossedWalls[1] = True
+					if canCut == True and False not in crossedWalls:
+						if maze[row][self.mazeSize - 1][0] + maze[row][self.mazeSize - 1][1] + maze[row][self.mazeSize - 1][2] + maze[row][self.mazeSize - 1][3] < 2:
+							continue
+						if sideMaze[row][0][0] + sideMaze[row][0][1] + sideMaze[row][0][2] + sideMaze[row][0][3] < 2:
+							continue
+						holes.append(row)
+						crossedWalls = [False, False]
+						canCut = False
+				for hole in holes:
+					maze[hole][self.mazeSize - 1][3] = 0
+					sideMaze[hole][0][2] = 0
 
 	def create_exit(self):
 		downright = random.randint(0, 1)

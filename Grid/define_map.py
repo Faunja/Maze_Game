@@ -182,7 +182,6 @@ class define_Map:
 			Grid.mapdisplayChunk = int(Grid.mapdisplaymazeSize / Grid.mazeSize * 3)
 			if Grid.mapdisplayChunk % 2 == 0:
 				Grid.mapdisplayChunk += 1
-		Grid.mapwallWidth = (9 / Grid.mapdisplaymazeSize) / 20
 		Display.maptileSize = Display.DisplayHeight / Grid.mapdisplaymazeSize
 
 	def update_map(self):
