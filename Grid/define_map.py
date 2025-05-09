@@ -11,7 +11,7 @@ class define_Map:
 			reference = pickle.load(file)
 			self.oldPositions = reference.oldPositions
 			self.storedPositions = reference.storedPositions
-			self.cameraPosition = reference.position.copy()
+			self.cameraPosition = reference.cameraPosition.copy()
 	
 	def __init__(self):
 		self.oldPositions = []
@@ -148,8 +148,8 @@ class define_Map:
 		Grid.displaymazeSize += 2 * direction
 		if Grid.displaymazeSize < Grid.defultdisplaymazeSize:
 			Grid.displaymazeSize = Grid.defultdisplaymazeSize
-		if Grid.displaymazeSize > Grid.defultdisplaymazeSize * 3:
-			Grid.displaymazeSize = Grid.defultdisplaymazeSize * 3
+		if Grid.displaymazeSize > Grid.defultdisplaymazeSize * 9:
+			Grid.displaymazeSize = Grid.defultdisplaymazeSize * 9
 
 		if Grid.displaymazeSize < Grid.mazeSize:
 			Grid.displayChunk = 3

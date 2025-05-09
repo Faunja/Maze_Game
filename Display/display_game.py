@@ -45,6 +45,34 @@ def display_box(box, position, tilesize, color):
 	if box[3] == 1:
 		pygame.draw.line(User.Display, color, (position[0] + displayboxSize, position[1]), (position[0] + displayboxSize, position[1] + displayboxSize), displaywallWidth)
 
+def draw_maze(Maze, xPosition, yPosition):
+	if Maze == None:
+		return
+	displayPosition = [Map.cameraPosition[0] * Display.tileSize, Map.cameraPosition[1] * Display.tileSize]
+	displayboxSize = Grid.boxSize * Display.tileSize
+	tileOffset = int((Grid.displaymazeSize - Grid.mazeSize) * displayboxSize / 2)
+	for col in range(Grid.mazeSize):
+		yOffset = col * displayboxSize - (displayPosition[1] - (yPosition - Character.startgridPosition[1]) * Grid.mazeSize * displayboxSize) + Display.ScreenOffset[1] + tileOffset
+		if yOffset < -displayboxSize or yOffset > Display.DisplayHeight + displayboxSize:
+			continue
+		for row in range(Grid.mazeSize):
+			xOffset = row * displayboxSize - (displayPosition[0] - (xPosition - Character.startgridPosition[0]) * Grid.mazeSize * displayboxSize) + Display.ScreenOffset[0] + tileOffset
+			if xOffset < -displayboxSize or xOffset > Display.DisplayWidth + displayboxSize:
+				continue
+			display_box(Maze.maze[col][row], [xOffset, yOffset], Display.tileSize, Display.memorywallColor)
+
+def draw_grid():
+	for y in range(Grid.displayChunk - int(Grid.displayChunk / 2) - Grid.displayChunk, Grid.displayChunk - int(Grid.displayChunk / 2)):
+		yPosition = Map.displaygridPosition[1] + y
+		if yPosition < 0 or yPosition > Grid.gridSize - 1:
+			continue
+		for x in range(Grid.displayChunk - int(Grid.displayChunk / 2) - Grid.displayChunk, Grid.displayChunk - int(Grid.displayChunk / 2)):
+			xPosition = Map.displaygridPosition[0] + x
+			if xPosition < 0 or xPosition > Grid.gridSize - 1:
+				continue
+			Maze = Grid.grid[Map.displaygridPosition[1] + y][Map.displaygridPosition[0] + x]
+			draw_maze(Maze, xPosition, yPosition)
+
 def display_grid():
 	displayPosition = [Map.cameraPosition[0] * Display.tileSize, Map.cameraPosition[1] * Display.tileSize]
 	displayboxSize = Grid.boxSize * Display.tileSize

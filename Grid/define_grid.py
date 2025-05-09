@@ -186,12 +186,12 @@ class define_Grid:
 			Maze[exitPosition][self.mazeSize - 1][3] = 0
 		
 	def check_emptyChunks(self, position):
-		for y in range(self.displayChunk - int(self.displayChunk / 2) - self.displayChunk, self.displayChunk - int(self.displayChunk / 2)):
+		for y in range(-1, 2):
 			if position[1] + y < 0 or position[1] + y > self.gridSize - 1:
 				continue
 			if self.grid[position[1] + y][position[0]] == None:
 				return [position[0], position[1] + y]
-		for x in range(self.displayChunk - int(self.displayChunk / 2) - self.displayChunk, self.displayChunk - int(self.displayChunk / 2)):
+		for x in range(-1, 2):
 			if position[0] + x < 0 or position[0] + x > self.gridSize - 1:
 				continue
 			if self.grid[position[1]][position[0] + x] == None:
