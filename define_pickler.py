@@ -11,16 +11,17 @@ class define_pickler:
 		self.maxTime = 60
 
 	def pickle_data(self):
-		if os.path.exists('Save_data') == False:
-			os.mkdir('Save_data')
-		with open('Save_data/Display.pkl', 'wb') as file:
-			pickle.dump(Display, file)
-		with open('Save_data/Grid.pkl', 'wb') as file:
-			pickle.dump(Grid, file)
-		with open('Save_data/Map.pkl', 'wb') as file:
-			pickle.dump(Map, file)
-		with open('Save_data/Character.pkl', 'wb') as file:
-			pickle.dump(Character, file)
+		if Character.completedMaze == False:
+			if os.path.exists('Save_data') == False:
+				os.mkdir('Save_data')
+			with open('Save_data/Display.pkl', 'wb') as file:
+				pickle.dump(Display, file)
+			with open('Save_data/Grid.pkl', 'wb') as file:
+				pickle.dump(Grid, file)
+			with open('Save_data/Map.pkl', 'wb') as file:
+				pickle.dump(Map, file)
+			with open('Save_data/Character.pkl', 'wb') as file:
+				pickle.dump(Character, file)
 	
 	def check_pickle(self):
 		currentTime = time.time()
