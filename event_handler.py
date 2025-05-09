@@ -9,35 +9,20 @@ from Display.define_display import Display
 def event_keydown(keypress):
 	if keypress == Controls.quitGame:
 		User.playing = False
-	if keypress in Controls.changedisplayMap:
-		if Map.displayMap == False:
-			Map.displayMap = True
-			Character.movement = [0, 0]
-		else:
-			Map.displayMap = False
-			Map.movement = [0, 0]
 
-	if Map.displayMap == False:
-		if keypress in Controls.moveDown:
-			Character.movement[1] = 1
-		if keypress in Controls.moveUp:
-			Character.movement[1] = -1
-		if keypress in Controls.moveLeft:
-			Character.movement[0] = -1
-		if keypress in Controls.moveRight:
-			Character.movement[0] = 1
-		if keypress in Controls.holdRun and Character.tired == False:
-			Character.running = True
-	else:
-		if keypress in Controls.moveDown:
-			Map.movement[1] = 1
-		if keypress in Controls.moveUp:
-			Map.movement[1] = -1
-		if keypress in Controls.moveLeft:
-			Map.movement[0] = -1
-		if keypress in Controls.moveRight:
-			Map.movement[0] = 1
+	if keypress in Controls.moveDown:
+		Character.movement[1] = 1
+	if keypress in Controls.moveUp:
+		Character.movement[1] = -1
+	if keypress in Controls.moveLeft:
+		Character.movement[0] = -1
+	if keypress in Controls.moveRight:
+		Character.movement[0] = 1
+	if keypress in Controls.holdRun and Character.tired == False:
+		Character.running = True
 
+	if keypress in Controls.changeCamera:
+		Map.centeredMap = not Map.centeredMap
 	if keypress in Controls.changedisplayStats:
 		Display.displayStats = 1 - Display.displayStats
 	if keypress in Controls.changeTime:
@@ -46,26 +31,16 @@ def event_keydown(keypress):
 		Display.toggle_fullscreen()
 
 def event_keyup(keypress):
-	if Map.displayMap == False:
-		if keypress in Controls.moveDown and Character.movement[1] == 1:
-			Character.movement[1] = 0
-		if keypress in Controls.moveUp and Character.movement[1] == -1:
-			Character.movement[1] = 0
-		if keypress in Controls.moveLeft and Character.movement[0] == -1:
-			Character.movement[0] = 0
-		if keypress in Controls.moveRight and Character.movement[0] == 1:
-			Character.movement[0] = 0
-		if keypress in Controls.holdRun:
-			Character.running = False
-	else:
-		if keypress in Controls.moveDown and Map.movement[1] == 1:
-			Map.movement[1] = 0
-		if keypress in Controls.moveUp and Map.movement[1] == -1:
-			Map.movement[1] = 0
-		if keypress in Controls.moveLeft and Map.movement[0] == -1:
-			Map.movement[0] = 0
-		if keypress in Controls.moveRight and Map.movement[0] == 1:
-			Map.movement[0] = 0
+	if keypress in Controls.moveDown and Character.movement[1] == 1:
+		Character.movement[1] = 0
+	if keypress in Controls.moveUp and Character.movement[1] == -1:
+		Character.movement[1] = 0
+	if keypress in Controls.moveLeft and Character.movement[0] == -1:
+		Character.movement[0] = 0
+	if keypress in Controls.moveRight and Character.movement[0] == 1:
+		Character.movement[0] = 0
+	if keypress in Controls.holdRun:
+		Character.running = False
 
 def event_handler():
 	for event in pygame.event.get():
@@ -74,15 +49,15 @@ def event_handler():
 		if event.type == pygame.KEYUP:
 			event_keyup(event.key)
 
-		if Map.displayMap:
-			if event.type == pygame.MOUSEBUTTONDOWN:
-				if event.button == 1:
-					Map.grabbedMap = True
-			if event.type == pygame.MOUSEBUTTONUP:
-				if event.button == 1:
-					Map.grabbedMap = False
-			if event.type == pygame.MOUSEWHEEL:
-				Map.update_mapSize(-event.y)
+		if event.type == pygame.MOUSEBUTTONDOWN:
+			if event.button == 1:
+				Map.centeredMap = False
+				Map.grabbedMap = True
+		if event.type == pygame.MOUSEBUTTONUP:
+			if event.button == 1:
+				Map.grabbedMap = False
+		if event.type == pygame.MOUSEWHEEL:
+			Map.update_mapSize(-event.y)
 
 		if event.type == pygame.VIDEORESIZE:
 			width, height = event.size
@@ -91,7 +66,6 @@ def event_handler():
 			User.playing = False
 	
 	if Character.completedMaze == False:
-		if Map.displayMap == False:
-			Character.update_character()
+		Character.update_character()
 		Map.update_map()
 

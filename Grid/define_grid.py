@@ -16,10 +16,6 @@ class define_Grid:
 				self.displaymazeSize = reference.displaymazeSize
 				self.displayChunk = reference.displayChunk
 				self.wallWidth = reference.wallWidth
-				
-				self.defualtmapSize = reference.defualtmapSize
-				self.mapdisplaymazeSize = reference.mapdisplaymazeSize
-				self.mapdisplayChunk = reference.mapdisplayChunk
 			except:
 				pass
 	
@@ -27,24 +23,16 @@ class define_Grid:
 		self.gridSize = 101
 		self.mazeSize = 15
 		self.boxSize = 1
-
-		self.displaymazeSize = 9
+		
+		self.defultdisplaymazeSize = 9
+		self.displaymazeSize = self.defultdisplaymazeSize
 		if self.displaymazeSize < self.mazeSize:
 			self.displayChunk = 3
 		else:
-			self.displayChunk = int(self.displaymazeSize / self.mazeSize * 3)
+			self.displayChunk = int(self.displaymazeSize / self.mazeSize)
 			if self.displayChunk % 2 == 0:
 				self.displayChunk += 1
 		self.wallWidth = (9 / self.displaymazeSize) / 20
-		
-		self.defualtmapSize = 31
-		self.mapdisplaymazeSize = self.defualtmapSize
-		if self.mapdisplaymazeSize < self.mazeSize:
-			self.mapdisplayChunk = 3
-		else:
-			self.mapdisplayChunk = int(self.mapdisplaymazeSize / self.mazeSize * 3)
-			if self.mapdisplayChunk % 2 == 0:
-				self.mapdisplayChunk += 1
 
 		self.grid = []
 		for row in range(self.gridSize):

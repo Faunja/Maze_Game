@@ -11,6 +11,7 @@ class define_Map:
 			reference = pickle.load(file)
 			self.oldPositions = reference.oldPositions
 			self.storedPositions = reference.storedPositions
+			self.cameraPosition = reference.position.copy()
 	
 	def __init__(self):
 		self.oldPositions = []
@@ -21,19 +22,18 @@ class define_Map:
 				self.storedPositions[row].append([])
 		self.currentPositions = [[Character.gridPosition.copy(), Character.mazePosition.copy()]]
 		
-		self.displayMap = False
+		self.centeredMap = True
+		self.cameraMoving = False
 		self.grabbedMap = False
 		self.oldmousePosition = None
-		self.mapPosition = Character.cameraPosition.copy()
-		self.gridPosition = Character.gridPosition.copy()
-
-		self.movement = [0, 0]
-		self.mapVelocity = [False, False]
-		self.maxVelocity = Character.width / (Grid.displaymazeSize / Grid.mapdisplaymazeSize * 5)
+		
+		self.cameraPosition = [0, 0]
+		self.differenceLimit = [Grid.displaymazeSize / 4, Grid.displaymazeSize / 4]
+		self.cameraVelocity = 1 / 20
 		self.velocity = [0, 0]
-		self.speedGain = 1 / 5
-		self.stillFriction = .8
-		self.movingFriction = .9
+		self.friction = .8
+		
+		self.displaygridPosition = Character.gridPosition.copy()
 		
 		if os.path.exists('Save_data/Map.pkl'):
 			self.load_map()
@@ -112,88 +112,63 @@ class define_Map:
 				checkPositive[1][0] = False
 				break
 			self.currentPositions.append([[Character.gridPosition[0], Character.gridPosition[1] + checkPositive[1][1]], [Character.mazePosition[0], Character.mazePosition[1] + checkPositive[1][2]]])
-
-	def update_velocity(self):
-		self.velocity[0] += self.maxVelocity * self.speedGain * self.movement[0]
-		self.velocity[1] += self.maxVelocity * self.speedGain * self.movement[1]
-		if self.movement[0] != 0 or self.mapVelocity[0] == True:
-			self.velocity[0] *= self.movingFriction
-		else:
-			self.velocity[0] *= self.stillFriction
-		if self.movement[1] != 0 or self.mapVelocity[1] == True:
-			self.velocity[1] *= self.movingFriction
-		else:
-			self.velocity[1] *= self.stillFriction
-		if abs(self.velocity[0]) > self.maxVelocity:
-			if self.mapVelocity[0] == False:
-				self.velocity[0] = abs(self.velocity[0]) / self.velocity[0] * self.maxVelocity
-		else:
-			self.mapVelocity[0] = False
-		if abs(self.velocity[1]) > self.maxVelocity:
-			if self.mapVelocity[1] == False:
-				self.velocity[1] = abs(self.velocity[1]) / self.velocity[1] * self.maxVelocity
-		else:
-			self.mapVelocity[1] = False
 	
-	def update_gridPosition(self):
-		self.gridPosition = [round(Grid.gridSize / 2) + round(self.mapPosition[0] / Grid.mazeSize), round(Grid.gridSize / 2) + round(self.mapPosition[1] / Grid.mazeSize)]
-		if self.gridPosition[0] <= -1:
-			self.gridPosition[0] = 0
-		if self.gridPosition[0] >= Grid.gridSize:
-			self.gridPosition[0] = Grid.gridSize - 1
-		if self.gridPosition[1] <= -1:
-			self.gridPosition[1] = 0
-		if self.gridPosition[1] >= Grid.gridSize:
-			self.gridPosition[1] = Grid.gridSize - 1
-
-	def update_position(self):
+	def adjust_camera(self):
+		if self.cameraPosition[0] > Character.position[0] + self.differenceLimit[0] or self.cameraPosition[0] < Character.position[0] - self.differenceLimit[0]:
+			self.cameraMoving = True
+		if self.cameraPosition[1] > Character.position[1] + self.differenceLimit[1] or self.cameraPosition[1] < Character.position[1] - self.differenceLimit[1]:
+			self.cameraMoving = True
+		if self.cameraMoving == True:
+			self.cameraPosition[0] += (Character.position[0] - self.cameraPosition[0]) * self.cameraVelocity
+			self.cameraPosition[1] += (Character.position[1] - self.cameraPosition[1]) * self.cameraVelocity
+		if round(self.cameraPosition[0], int(Grid.mazeSize / 3)) == round(Character.position[0], int(Grid.mazeSize / 3)) and round(self.cameraPosition[1], int(Grid.mazeSize / 3)) == round(Character.position[1], int(Grid.mazeSize / 3)):
+			self.cameraMoving = False
+	
+	def move_camera(self):
 		if self.grabbedMap == False:
 			self.oldmousePosition = None
-			self.mapPosition[0] += self.velocity[0]
-			self.mapPosition[1] += self.velocity[1]
-			self.update_velocity()
+			self.cameraPosition[0] += self.velocity[0]
+			self.cameraPosition[1] += self.velocity[1]
+			self.velocity[0] *= self.friction
+			self.velocity[1] *= self.friction
 			return
 		mousePosition = pygame.mouse.get_pos()
 		if self.oldmousePosition == None:
 			self.oldmousePosition = mousePosition
 			return
-		self.mapPosition[0] -= (mousePosition[0] - self.oldmousePosition[0]) / Display.maptileSize
-		self.mapPosition[1] -= (mousePosition[1] - self.oldmousePosition[1]) / Display.maptileSize
-		self.velocity[0] = -(mousePosition[0] - self.oldmousePosition[0]) / Display.maptileSize
-		self.velocity[1] = -(mousePosition[1] - self.oldmousePosition[1]) / Display.maptileSize
-		if abs(self.velocity[0]) > self.maxVelocity:
-			self.mapVelocity[0] = True
-		if abs(self.velocity[1]) > self.maxVelocity:
-			self.mapVelocity[1] = True
+		self.cameraPosition[0] -= (mousePosition[0] - self.oldmousePosition[0]) / Display.tileSize
+		self.cameraPosition[1] -= (mousePosition[1] - self.oldmousePosition[1]) / Display.tileSize
+		self.velocity[0] = -(mousePosition[0] - self.oldmousePosition[0]) / Display.tileSize
+		self.velocity[1] = -(mousePosition[1] - self.oldmousePosition[1]) / Display.tileSize
 		self.oldmousePosition = mousePosition
 		if mousePosition[0] < 0 or mousePosition[0] > Display.DisplayWidth or mousePosition[1] < 0 or mousePosition[1] > Display.DisplayWidth:
 			self.grabbedMap = False
 
 	def update_mapSize(self, direction):
-		Grid.mapdisplaymazeSize += 2 * direction
-		if Grid.mapdisplaymazeSize < Grid.displaymazeSize:
-			Grid.mapdisplaymazeSize = Grid.displaymazeSize
-		if Grid.mapdisplaymazeSize > Grid.defualtmapSize * 3:
-			Grid.mapdisplaymazeSize = Grid.defualtmapSize * 3
+		Grid.displaymazeSize += 2 * direction
+		if Grid.displaymazeSize < Grid.defultdisplaymazeSize:
+			Grid.displaymazeSize = Grid.defultdisplaymazeSize
+		if Grid.displaymazeSize > Grid.defultdisplaymazeSize * 3:
+			Grid.displaymazeSize = Grid.defultdisplaymazeSize * 3
 
-		if Grid.mapdisplaymazeSize < Grid.mazeSize:
-			Grid.mapdisplayChunk = 3
+		if Grid.displaymazeSize < Grid.mazeSize:
+			Grid.displayChunk = 3
 		else:
-			Grid.mapdisplayChunk = int(Grid.mapdisplaymazeSize / Grid.mazeSize * 3)
-			if Grid.mapdisplayChunk % 2 == 0:
-				Grid.mapdisplayChunk += 1
-		Display.maptileSize = Display.DisplayHeight / Grid.mapdisplaymazeSize
+			Grid.displayChunk = int(Grid.displaymazeSize / Grid.mazeSize * 3)
+			if Grid.displayChunk % 2 == 0:
+				Grid.displayChunk += 1
+		Display.tileSize = Display.DisplayHeight / Grid.displaymazeSize
 
 	def update_map(self):
 		if Character.completedMaze:
 			return
 		self.update_oldPositions()
 		self.update_currentPosition()
-		if self.displayMap == False:
-			self.mapPosition = Character.cameraPosition.copy()
-			self.gridPosition = Character.gridPosition.copy()
+		self.displaygridPosition = [round(Grid.gridSize / 2) + round(self.cameraPosition[0] / Grid.mazeSize), round(Grid.gridSize / 2) + round(self.cameraPosition[1] / Grid.mazeSize)]
+		if self.centeredMap:
+			self.adjust_camera()
 		else:
-			self.update_position()
-			self.update_gridPosition()
+			self.move_camera()
+		
 
 Map = define_Map()

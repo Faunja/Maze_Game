@@ -8,7 +8,6 @@ class define_Character():
 			reference = pickle.load(file)
 			try:
 				self.position = reference.position
-				self.cameraPosition = reference.position.copy()
 				self.startgridPosition = reference.startgridPosition
 				self.gridPosition = reference.gridPosition
 				self.mazePosition = reference.mazePosition
@@ -26,7 +25,6 @@ class define_Character():
 		self.width = 1 / 4
 		self.outline = 4 / 5
 		self.position = [0, 0]
-		self.cameraPosition = [0, 0]
 		self.startgridPosition = [int(Grid.gridSize / 2), int(Grid.gridSize / 2)]
 		self.gridPosition = self.startgridPosition
 		self.mazePosition = [int(Grid.mazeSize / 2), int(Grid.mazeSize / 2)]
@@ -48,10 +46,6 @@ class define_Character():
 		self.timePassed = self.cooldown
 		self.tiredmaxVelocity = self.maxVelocity / 2
 		self.tiredspeedGain = self.speedGain / 2
-		
-		self.differenceLimit = [Grid.displaymazeSize / 4, Grid.displaymazeSize / 4]
-		self.cameraMoving = False
-		self.cameraVelocity = 1 / 20
 		
 		if os.path.exists('Save_data/Character.pkl'):
 			self.load_character()
@@ -111,17 +105,6 @@ class define_Character():
 				self.velocity[0] = abs(self.velocity[0]) / self.velocity[0] * self.maxVelocity
 			if abs(self.velocity[1]) > self.maxVelocity:
 				self.velocity[1] = abs(self.velocity[1]) / self.velocity[1] * self.maxVelocity
-
-	def update_camera(self):
-		if self.cameraPosition[0] > self.position[0] + self.differenceLimit[0] or self.cameraPosition[0] < self.position[0] - self.differenceLimit[0]:
-			self.cameraMoving = True
-		if self.cameraPosition[1] > self.position[1] + self.differenceLimit[1] or self.cameraPosition[1] < self.position[1] - self.differenceLimit[1]:
-			self.cameraMoving = True
-		if self.cameraMoving == True:
-			self.cameraPosition[0] += (self.position[0] - self.cameraPosition[0]) * self.cameraVelocity
-			self.cameraPosition[1] += (self.position[1] - self.cameraPosition[1]) * self.cameraVelocity
-		if round(self.cameraPosition[0], int(Grid.mazeSize / 3)) == round(self.position[0], int(Grid.mazeSize / 3)) and round(self.cameraPosition[1], int(Grid.mazeSize / 3)) == round(self.position[1], int(Grid.mazeSize / 3)):
-			self.cameraMoving = False
 
 	def hit_mazeWall(self):
 		if self.completedMaze:
@@ -193,7 +176,6 @@ class define_Character():
 	def update_character(self):
 		self.position[0] += self.velocity[0]
 		self.position[1] += self.velocity[1]
-		self.update_camera()
 		self.update_velocity()
 		if self.completedMaze == False:
 			self.update_gridPosition()
