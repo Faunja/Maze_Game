@@ -7,10 +7,12 @@ class define_Grid:
 		with open('Save_data/Grid.pkl', 'rb') as file:
 			reference = pickle.load(file)
 			try:
+				self.grid = reference.grid
+				
 				self.gridSize = reference.gridSize
 				self.mazeSize = reference.mazeSize
 				self.boxSize = reference.boxSize
-
+				
 				self.displaymazeSize = reference.displaymazeSize
 				self.displayChunk = reference.displayChunk
 				self.wallWidth = reference.wallWidth
@@ -18,44 +20,41 @@ class define_Grid:
 				self.defualtmapSize = reference.defualtmapSize
 				self.mapdisplaymazeSize = reference.mapdisplaymazeSize
 				self.mapdisplayChunk = reference.mapdisplayChunk
-				self.mapwallWidth = reference.mapwallWidth
-
-				self.grid = reference.grid
 			except:
 				pass
 	
 	def __init__(self):	
+		self.gridSize = 101
+		self.mazeSize = 15
+		self.boxSize = 1
+
+		self.displaymazeSize = 9
+		if self.displaymazeSize < self.mazeSize:
+			self.displayChunk = 3
+		else:
+			self.displayChunk = int(self.displaymazeSize / self.mazeSize * 3)
+			if self.displayChunk % 2 == 0:
+				self.displayChunk += 1
+		self.wallWidth = (9 / self.displaymazeSize) / 20
+		
+		self.defualtmapSize = 31
+		self.mapdisplaymazeSize = self.defualtmapSize
+		if self.mapdisplaymazeSize < self.mazeSize:
+			self.mapdisplayChunk = 3
+		else:
+			self.mapdisplayChunk = int(self.mapdisplaymazeSize / self.mazeSize * 3)
+			if self.mapdisplayChunk % 2 == 0:
+				self.mapdisplayChunk += 1
+
+		self.grid = []
+		for row in range(self.gridSize):
+			self.grid.append([])
+			for column in range(self.gridSize):
+				self.grid[row].append(None)
+		self.create_exit()
+		
 		if os.path.exists('Save_data/Grid.pkl'):
 			self.load_grid()
-		else:
-			self.gridSize = 101
-			self.mazeSize = 15
-			self.boxSize = 1
-
-			self.displaymazeSize = 9
-			if self.displaymazeSize < self.mazeSize:
-				self.displayChunk = 3
-			else:
-				self.displayChunk = int(self.displaymazeSize / self.mazeSize * 3)
-				if self.displayChunk % 2 == 0:
-					self.displayChunk += 1
-			self.wallWidth = (9 / self.displaymazeSize) / 20
-			
-			self.defualtmapSize = 31
-			self.mapdisplaymazeSize = self.defualtmapSize
-			if self.mapdisplaymazeSize < self.mazeSize:
-				self.mapdisplayChunk = 3
-			else:
-				self.mapdisplayChunk = int(self.mapdisplaymazeSize / self.mazeSize * 3)
-				if self.mapdisplayChunk % 2 == 0:
-					self.mapdisplayChunk += 1
-
-			self.grid = []
-			for row in range(self.gridSize):
-				self.grid.append([])
-				for column in range(self.gridSize):
-					self.grid[row].append(None)
-			self.create_exit()
 
 	def cut_chunkWalls(self, position):
 		maze = self.grid[position[1]][position[0]].maze
