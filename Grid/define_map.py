@@ -185,6 +185,8 @@ class define_Map:
 		Display.maptileSize = Display.DisplayHeight / Grid.mapdisplaymazeSize
 
 	def update_map(self):
+		if Character.completedMaze:
+			return
 		self.update_oldPositions()
 		self.update_currentPosition()
 		if self.displayMap == False:
