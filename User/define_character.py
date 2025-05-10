@@ -37,7 +37,7 @@ class define_Character():
 		self.movingFriction = .9
 		
 		self.running = False
-		self.maxStamina = 5 * User.FPS
+		self.maxStamina = 10 * User.FPS
 		self.runningmaxVelocity = self.maxVelocity * 1.5
 		self.runningspeedGain = self.speedGain * 1.5
 		self.stamina = self.maxStamina

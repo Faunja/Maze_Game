@@ -20,18 +20,13 @@ class define_Grid:
 				pass
 	
 	def __init__(self):	
-		self.gridSize = 101
+		self.gridSize = 25
 		self.mazeSize = 15
 		self.boxSize = 1
 		
 		self.defultdisplaymazeSize = 9
 		self.displaymazeSize = self.defultdisplaymazeSize
-		if self.displaymazeSize < self.mazeSize:
-			self.displayChunk = 3
-		else:
-			self.displayChunk = int(self.displaymazeSize / self.mazeSize)
-			if self.displayChunk % 2 == 0:
-				self.displayChunk += 1
+		self.displayChunk = int(self.displaymazeSize / self.mazeSize) + 1
 		self.wallWidth = (9 / self.displaymazeSize) / 20
 
 		self.grid = []

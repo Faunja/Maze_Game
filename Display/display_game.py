@@ -36,6 +36,8 @@ def display_character():
 def display_box(box, position, tilesize, color):
 	displayboxSize = Grid.boxSize * tilesize
 	displaywallWidth = round(Grid.wallWidth * tilesize)
+	if displaywallWidth < 1:
+		displaywallWidth = 1
 	if box[0] == 1:
 		pygame.draw.line(User.Display, color, (position[0], position[1] + displayboxSize), (position[0] + displayboxSize, position[1] + displayboxSize), displaywallWidth)
 	if box[1] == 1:
@@ -59,14 +61,14 @@ def draw_maze(Maze, xPosition, yPosition):
 			xOffset = row * displayboxSize - (displayPosition[0] - (xPosition - Character.startgridPosition[0]) * Grid.mazeSize * displayboxSize) + Display.ScreenOffset[0] + tileOffset
 			if xOffset < -displayboxSize or xOffset > Display.DisplayWidth + displayboxSize:
 				continue
-			display_box(Maze.maze[col][row], [xOffset, yOffset], Display.tileSize, Display.memorywallColor)
+			display_box(Maze.maze[col][row], [xOffset, yOffset], Display.tileSize, Display.wallColor)
 
 def draw_grid():
-	for y in range(Grid.displayChunk - int(Grid.displayChunk / 2) - Grid.displayChunk, Grid.displayChunk - int(Grid.displayChunk / 2)):
+	for y in range(-Grid.displayChunk, Grid.displayChunk + 1):
 		yPosition = Map.displaygridPosition[1] + y
 		if yPosition < 0 or yPosition > Grid.gridSize - 1:
 			continue
-		for x in range(Grid.displayChunk - int(Grid.displayChunk / 2) - Grid.displayChunk, Grid.displayChunk - int(Grid.displayChunk / 2)):
+		for x in range(-Grid.displayChunk, Grid.displayChunk + 1):
 			xPosition = Map.displaygridPosition[0] + x
 			if xPosition < 0 or xPosition > Grid.gridSize - 1:
 				continue
@@ -77,11 +79,11 @@ def display_grid():
 	displayPosition = [Map.cameraPosition[0] * Display.tileSize, Map.cameraPosition[1] * Display.tileSize]
 	displayboxSize = Grid.boxSize * Display.tileSize
 	tileOffset = int((Grid.displaymazeSize - Grid.mazeSize) * displayboxSize / 2)
-	for y in range(Grid.displayChunk - int(Grid.displayChunk / 2) - Grid.displayChunk, Grid.displayChunk - int(Grid.displayChunk / 2)):
+	for y in range(-Grid.displayChunk, Grid.displayChunk + 1):
 		yPosition = Map.displaygridPosition[1] + y
 		if yPosition < 0 or yPosition > Grid.gridSize - 1:
 			continue
-		for x in range(Grid.displayChunk - int(Grid.displayChunk / 2) - Grid.displayChunk, Grid.displayChunk - int(Grid.displayChunk / 2)):
+		for x in range(-Grid.displayChunk, Grid.displayChunk + 1):
 			xPosition = Map.displaygridPosition[0] + x
 			if xPosition < 0 or xPosition > Grid.gridSize - 1:
 				continue

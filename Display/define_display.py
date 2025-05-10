@@ -49,9 +49,20 @@ class define_Display:
 
 		User.update_display(self.DisplayWidth, self.DisplayHeight, self.fullscreen)
 	
+	def check_displaySize(self):
+		if self.DisplayWidth < int(User.ScreenSize[0] / 4):
+			self.DisplayWidth = int(User.ScreenSize[0] / 4)
+		if self.DisplayHeight < int(User.ScreenSize[1] / 4):
+			self.DisplayHeight = int(User.ScreenSize[1] / 4)
+		if self.DisplayWidth > int(self.DisplayHeight * User.aspectRatio):
+			self.DisplayWidth = int(self.DisplayHeight * User.aspectRatio)
+		if self.DisplayHeight > int(self.DisplayWidth * User.aspectRatio):
+			self.DisplayWidth = int(self.DisplayHeight / User.aspectRatio)
+
 	def change_displaySize(self, newWidth, newHeight):
 		self.DisplayWidth = newWidth
 		self.DisplayHeight = newHeight
+		self.check_displaySize()
 		if self.DisplayHeight < self.DisplayWidth:
 			self.ScreenOffset[1] = 0
 			self.ScreenOffset[0] = round((self.DisplayWidth - self.DisplayHeight) / 2)
@@ -61,6 +72,7 @@ class define_Display:
 			self.ScreenOffset[0] = 0
 			self.tileSize = self.DisplayWidth / Grid.displaymazeSize
 		self.CenterDisplay = [round(self.DisplayWidth / 2), round(self.DisplayHeight / 2)]
+		User.update_display(self.DisplayWidth, self.DisplayHeight, self.fullscreen)
 	
 	def toggle_fullscreen(self):
 		self.fullscreen = not self.fullscreen

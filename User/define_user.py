@@ -9,6 +9,7 @@ class define_User:
 			self.ScreenSize = Display[0]
 		except:
 			self.ScreenSize = [1920, 1080]
+		self.aspectRatio = self.ScreenSize[0] / self.ScreenSize[1]
 
 		self.FPS = 60
 		self.clock = pygame.time.Clock()
