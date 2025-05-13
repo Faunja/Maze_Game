@@ -20,7 +20,7 @@ class define_Grid:
 				pass
 	
 	def __init__(self):	
-		self.gridSize = 25
+		self.gridSize = 101
 		self.mazeSize = 15
 		self.boxSize = 1
 		
@@ -50,9 +50,9 @@ class define_Grid:
 				for col in range(0, self.mazeSize):
 					if col - 1 not in holes:
 						canCut = True
-					if maze[self.mazeSize - 1][col][2] == 1:
+					if maze[self.mazeSize - 1][col][2] == 1 and col != 0:
 						crossedWalls[0] = True
-					if sideMaze[0][col][2] == 1:
+					if sideMaze[0][col][2] == 1 and col != 0:
 						crossedWalls[1] = True
 					if canCut == True and False not in crossedWalls:
 						if maze[self.mazeSize - 1][col][0] + maze[self.mazeSize - 1][col][1] + maze[self.mazeSize - 1][col][2] + maze[self.mazeSize - 1][col][3] < 2:
@@ -75,9 +75,9 @@ class define_Grid:
 				for col in range(0, self.mazeSize):
 					if col - 1 not in holes:
 						canCut = True
-					if maze[0][col][2] == 1:
+					if maze[0][col][2] == 1 and col != 0:
 						crossedWalls[0] = True
-					if sideMaze[self.mazeSize - 1][col][2] == 1:
+					if sideMaze[self.mazeSize - 1][col][2] == 1 and col != 0:
 						crossedWalls[1] = True
 					if canCut == True and False not in crossedWalls:
 						if maze[0][col][0] + maze[0][col][1] + maze[0][col][2] + maze[0][col][3] < 2:
@@ -100,9 +100,9 @@ class define_Grid:
 				for row in range(0, self.mazeSize):
 					if row - 1 not in holes:
 						canCut = True
-					if maze[row][0][0] == 1:
+					if maze[row][0][1] == 1 and row != 0:
 						crossedWalls[0] = True
-					if sideMaze[row][self.mazeSize - 1][0] == 1:
+					if sideMaze[row][self.mazeSize - 1][1] == 1 and row != 0:
 						crossedWalls[1] = True
 					if canCut == True and False not in crossedWalls:
 						if maze[row][0][0] + maze[row][0][1] + maze[row][0][2] + maze[row][0][3] < 2:
@@ -125,9 +125,9 @@ class define_Grid:
 				for row in range(0, self.mazeSize):
 					if row - 1 not in holes:
 						canCut = True
-					if maze[row][self.mazeSize - 1][0] == 1:
+					if maze[row][self.mazeSize - 1][1] == 1 and row != 0:
 						crossedWalls[0] = True
-					if sideMaze[row][0][0] == 1:
+					if sideMaze[row][0][1] == 1 and row != 0:
 						crossedWalls[1] = True
 					if canCut == True and False not in crossedWalls:
 						if maze[row][self.mazeSize - 1][0] + maze[row][self.mazeSize - 1][1] + maze[row][self.mazeSize - 1][2] + maze[row][self.mazeSize - 1][3] < 2:
