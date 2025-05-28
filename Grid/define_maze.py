@@ -3,89 +3,97 @@ from pygame.locals import *
 from User.define_user import User
 
 class define_Maze:
-	def check_position(self, checkedPosition, prePositions):
-		for prePosition in prePositions:
-			if checkedPosition == prePosition:
-				return True
-		if checkedPosition[0] == len(self.maze) or checkedPosition[0] < 0:
-			return True
-		if checkedPosition[1] == len(self.maze) or checkedPosition[1] < 0:
+	def check_maze(self):
+		if self.position[0] != self.size - 1 or self.position[1] != self.size - 1:
 			return True
 		return False
 
-	def check_closedBox(self):
-		for row in self.maze:
-			for column in row:
-				if column[0] == 1 and column[1] == 1 and column[2] == 1 and column[3] == 1:
-					return True
-		return False
+	def replace_numbers(self, firstNumber, secondNumber):
+		if firstNumber < secondNumber:
+			replacement = firstNumber
+			replace = secondNumber
+		else:
+			replacement = secondNumber
+			replace = firstNumber
+		for number in range(self.size):
+			if self.numbers[self.position[1]][number] == replace:
+				self.numbers[self.position[1]][number] = replacement
+	
+	def create_maze(self):
+		while self.check_maze():
+			if self.siding and self.position[1] != self.size - 1:
+				if random.randint(0, 1) and self.numbers[self.position[1]][self.position[0]] != self.numbers[self.position[1]][self.position[0] + 1]:
+					self.maze[self.position[1]][self.position[0]][3] = 0
+					self.maze[self.position[1]][self.position[0] + 1][2] = 0
+					self.replace_numbers(self.numbers[self.position[1]][self.position[0]], self.numbers[self.position[1]][self.position[0] + 1])
+			elif self.siding:
+				if self.numbers[self.position[1]][self.position[0]] != self.numbers[self.position[1]][self.position[0] + 1]:
+					self.maze[self.position[1]][self.position[0]][3] = 0
+					self.maze[self.position[1]][self.position[0] + 1][2] = 0
+					self.replace_numbers(self.numbers[self.position[1]][self.position[0]], self.numbers[self.position[1]][self.position[0] + 1])
 
-	def create_maze(self, mazeSize):
-		self.maze = []
-		for row in range(mazeSize):
-			self.maze.append([])
-			for column in range(mazeSize):
-				self.maze[row].append([1, 1, 1, 1])
+			if self.flooring:
+				if random.randint(0, 1):
+					self.maze[self.position[1]][self.position[0]][0] = 0
+					self.maze[self.position[1] + 1][self.position[0]][1] = 0
+					self.numbers[self.position[1] + 1][self.position[0]] = self.numbers[self.position[1]][self.position[0]]
+					self.holes[self.floorNumbers.index(self.numbers[self.position[1]][self.position[0]])] = True
+				else:
+					self.floorPositions[self.floorNumbers.index(self.numbers[self.position[1]][self.position[0]])].append(self.position.copy())
+				if self.position[0] == self.size - 1:
+					self.checkfloor = True
+				else:
+					if self.numbers[self.position[1]][self.position[0]] != self.numbers[self.position[1]][self.position[0] + 1]:
+						if self.numbers[self.position[1]][self.position[0] + 1] not in self.floorNumbers:
+							self.floorNumbers.append(self.numbers[self.position[1]][self.position[0] + 1])
+							self.floorPositions.append([])
+							self.holes.append(False)
+
+				if self.checkfloor:
+					for number in range(len(self.floorPositions)):
+						if self.holes[number]:
+							continue
+						hole = random.choice(self.floorPositions[number])
+						self.maze[hole[1]][hole[0]][0] = 0
+						self.maze[hole[1] + 1][hole[0]][1] = 0
+						self.numbers[hole[1] + 1][hole[0]] = self.numbers[hole[1]][hole[0]]
+						self.holes[number] = True
+
+					self.holes = [False]
+					self.floorPositions = [[]]
+					self.checkfloor = False
+
+			self.position[0] += 1
+			if self.check_maze():
+				if self.position[0] == self.size - 1 and self.siding:
+					self.position[0] = 0
+					self.floorNumbers = [self.numbers[self.position[1]][self.position[0]]]
+					self.siding = False
+					self.flooring = True
+					self.number = self.numbers[self.position[1]][self.position[0]]
+				elif self.position[0] == self.size:
+					self.position = [0, self.position[1] + 1]
+					self.siding = True
+					self.flooring = False
+
+	def __init__(self, size):
+		self.size = size
 		
-		oldPositions = []
-		position = [0, 0]
-		insertPosition = 0
+		self.maze = []
+		self.numbers = []
+		for row in range(self.size):
+			self.maze.append([])
+			self.numbers.append([])
+			for column in range(self.size):
+				self.maze[row].append([1, 1, 1, 1])
+				self.numbers[row].append(row * self.size + column)
+		self.position = [0, 0]
 
-		closedBox = self.check_closedBox()
+		self.siding = True
+		self.flooring = False
+		self.floorNumbers = [self.numbers[self.position[1]][self.position[0]]]
+		self.holes = [False]
+		self.floorPositions = [[]]
+		self.checkfloor = False
 
-		while closedBox:
-			canMove = False
-			cantMove = [False, False, False, False]
-			
-			canAppend = True
-			for oldPosition in oldPositions:
-				if position == oldPosition:
-					canAppend = False
-					break
-			if canAppend == True:
-				oldPositions.insert(insertPosition, position.copy())
-				insertPosition += 1
-			while canMove == False:
-				movement = random.randint(1, 4)
-				
-				if movement == 1:
-					cantMove[0] = self.check_position([position[0], position[1] + 1], oldPositions)
-					if cantMove[0] == False:
-						self.maze[position[1]][position[0]][0] = 0
-						position[1] += 1
-						self.maze[position[1]][position[0]][1] = 0
-						canMove = True
-				
-				if movement == 2:
-					cantMove[1] = self.check_position([position[0], position[1] - 1], oldPositions)
-					if cantMove[1] == False:
-						self.maze[position[1]][position[0]][1] = 0
-						position[1] -= 1
-						self.maze[position[1]][position[0]][0] = 0
-						canMove = True
-				
-				if movement == 3:
-					cantMove[2] = self.check_position([position[0] - 1, position[1]], oldPositions)
-					if cantMove[2] == False:
-						self.maze[position[1]][position[0]][2] = 0
-						position[0] -= 1
-						self.maze[position[1]][position[0]][3] = 0
-						canMove = True
-				
-				if movement == 4:
-					cantMove[3] = self.check_position([position[0] + 1, position[1]], oldPositions)
-					if cantMove[3] == False:
-						self.maze[position[1]][position[0]][3] = 0
-						position[0] += 1
-						self.maze[position[1]][position[0]][2] = 0
-						canMove = True
-				
-				if cantMove[0] and cantMove[1] and cantMove[2] and cantMove[3]:
-					position = oldPositions[insertPosition - 2].copy()
-					insertPosition -= 1
-					canMove = True
-			
-			closedBox = self.check_closedBox()
-
-	def __init__(self, mazeSize):
-		self.create_maze(mazeSize)
+		self.create_maze()
