@@ -11,16 +11,18 @@ class define_Character():
 				self.startgridPosition = reference.startgridPosition
 				self.gridPosition = reference.gridPosition
 				self.mazePosition = reference.mazePosition
-					
+
 				self.stamina = reference.stamina
 				self.tired = reference.tired
 				self.timePassed = reference.timePassed
+				self.timeSpent = reference.timeSpent
 			except:
 				pass
-			
-	def __init__(self):
-		self.completedMaze = False
 
+	def __init__(self):
+		self.timeSpent = [0, 0, 0]
+		self.completedMaze = False
+		
 		self.color = [60, 60, 195]
 		self.width = 1 / 4
 		self.outline = 4 / 5
@@ -185,5 +187,12 @@ class define_Character():
 		if self.completedMaze == False:
 			self.update_gridPosition()
 			self.hit_mazeWall()
+			self.timeSpent[0] += 1 / User.FPS
+			if self.timeSpent[0] >= 60:
+				self.timeSpent[1] += 1
+				self.timeSpent[0] -= 60
+				if self.timeSpent[1] >= 60:
+					self.timeSpent[2] += 1
+					self.timeSpent[1] -= 60
 
 Character = define_Character()

@@ -9,15 +9,27 @@ from Grid.define_grid import Grid
 def print_text(text, position, color = (255, 255, 255)):
 	printed = User.font.render(text, True, color)
 	printed_width, printed_height = printed.get_size()
-	if Character.completedMaze == False:
+	if not Character.completedMaze:
 		User.Display.blit(printed, (position[0] * printed_width, position[1] * printed_height))
 	else:
 		User.Display.blit(printed, (position[0] - printed_width / 2, position[1]))
 
 def display_stats():
-	print_text("Grid Position: ("+str(Character.gridPosition[0])+", "+str(Character.gridPosition[1])+")", [0, 1], (120, 120, 255))
-	print_text("Maze Position: ("+str(Character.mazePosition[0])+", "+str(Character.mazePosition[1])+")", [0, 2], (120, 120, 255))
-	print_text("Stamina: "+str(round(Character.stamina / Character.maxStamina * 100, 3)), [0, 3], (120, 120, 255))
+	if Character.timeSpent[2] >= 1:
+		if Character.timeSpent[1] < 10:
+			print_text("Time Spent: "+str(int(Character.timeSpent[2]))+":0"+str(int(Character.timeSpent[1]))+":"+str(round(Character.timeSpent[0], 2)), [0, 1], (120, 120, 255))
+		else:
+			print_text("Time Spent: "+str(int(Character.timeSpent[2]))+":"+str(int(Character.timeSpent[1]))+":"+str(round(Character.timeSpent[0], 2)), [0, 1], (120, 120, 255))
+	elif Character.timeSpent[1] >= 1:
+		if Character.timeSpent[0] < 10:
+			print_text("Time Spent: "+str(int(Character.timeSpent[1]))+":0"+str(round(Character.timeSpent[0], 2)), [0, 1], (120, 120, 255))
+		else:
+			print_text("Time Spent: "+str(int(Character.timeSpent[1]))+":"+str(round(Character.timeSpent[0], 2)), [0, 1], (120, 120, 255))
+	else:
+		print_text("Time Spent: "+str(round(Character.timeSpent[0], 2)), [0, 1], (120, 120, 255))
+	print_text("Grid Position: ("+str(Character.gridPosition[0])+", "+str(Character.gridPosition[1])+")", [0, 2], (120, 120, 255))
+	print_text("Maze Position: ("+str(Character.mazePosition[0])+", "+str(Character.mazePosition[1])+")", [0, 3], (120, 120, 255))
+	print_text("Stamina: "+str(round(Character.stamina / Character.maxStamina * 100, 3)), [0, 4], (120, 120, 255))
 	if User.clock.get_fps() < 40:
 		print_text("FPS: "+f'{User.clock.get_fps() :.1f}', [0, 0], (255, 60, 60))
 		return
@@ -117,4 +129,16 @@ def display_game():
 	else:
 		pygame.draw.rect(User.Display, Display.floorColor, (0, 0, Display.DisplayWidth, Display.DisplayHeight))
 		print_text("Good Job.", [Display.DisplayWidth / 2, Display.DisplayHeight / 2], Display.wallColor)
+		if Character.timeSpent[2] >= 1:
+			if Character.timeSpent[1] < 10:
+				print_text("Time Spent: "+str(int(Character.timeSpent[2]))+":0"+str(int(Character.timeSpent[1]))+":"+str(round(Character.timeSpent[0], 2)), [Display.DisplayWidth / 2, 0], Display.wallColor)
+			else:
+				print_text("Time Spent: "+str(int(Character.timeSpent[2]))+":"+str(int(Character.timeSpent[1]))+":"+str(round(Character.timeSpent[0], 2)), [Display.DisplayWidth / 2, 0], Display.wallColor)
+		elif Character.timeSpent[1] >= 1:
+			if Character.timeSpent[0] < 10:
+				print_text("Time Spent: "+str(int(Character.timeSpent[1]))+":0"+str(round(Character.timeSpent[0], 2)), [Display.DisplayWidth / 2, 0], Display.wallColor)
+			else:
+				print_text("Time Spent: "+str(int(Character.timeSpent[1]))+":"+str(round(Character.timeSpent[0], 2)), [Display.DisplayWidth / 2, 0], Display.wallColor)
+		else:
+			print_text("Time Spent: "+str(round(Character.timeSpent[0], 2)), [Display.DisplayWidth / 2, 0], Display.wallColor)
 	
