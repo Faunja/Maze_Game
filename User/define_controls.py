@@ -12,7 +12,7 @@ class define_Controls:
 		self.changeCamera = [pygame.K_c]
 		self.changeTime = [pygame.K_t]
 
-		self.changedisplayStats = [pygame.K_F3, pygame.K_t]
+		self.changedisplayStats = [pygame.K_F3, pygame.K_r]
 		self.fullscreen = [pygame.K_F11, pygame.K_f]
 
 Controls = define_Controls()
