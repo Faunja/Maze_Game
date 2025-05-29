@@ -37,12 +37,14 @@ class define_Character():
 		self.movingFriction = .9
 		
 		self.running = False
-		self.maxStamina = 10 * User.FPS
+		self.maxStamina = 100
+		self.staminaTime = 5
+		self.staminaGain = 4
+		self.stamina = self.maxStamina
 		self.runningmaxVelocity = self.maxVelocity * 1.5
 		self.runningspeedGain = self.speedGain * 1.5
-		self.stamina = self.maxStamina
 		self.tired = False
-		self.cooldown = 3 * User.FPS
+		self.cooldown = 2
 		self.timePassed = self.cooldown
 		self.tiredmaxVelocity = self.maxVelocity / 2
 		self.tiredspeedGain = self.speedGain / 2
@@ -51,21 +53,24 @@ class define_Character():
 			self.load_character()
 		
 	def update_running(self):
-		if self.stamina == 0 and self.tired == False:
+		if self.stamina <= 0 and not self.tired:
 			self.running = False
+			self.stamina = 0
 			self.tired = True
 			self.timePassed = 0
-		if self.tired == False:
+		if not self.tired:
 			if not self.running and self.stamina != self.maxStamina:
-				self.stamina += 1
+				self.stamina += self.maxStamina / self.staminaGain / User.FPS
+			if self.stamina > self.maxStamina:
+				self.stamina = self.maxStamina
 		else:
-			if self.timePassed != self.cooldown:
-				self.timePassed += 1
+			if self.timePassed <= self.cooldown:
+				self.timePassed += 1 / User.FPS
 			else:
-				self.stamina += 1
+				self.stamina += self.maxStamina / self.staminaGain / User.FPS
 				self.tired = False
 		if self.running and self.stamina != 0:
-			self.stamina -= 1
+			self.stamina -= self.maxStamina / self.staminaTime / User.FPS
 		self.color[0] = 195 - int(135 * (self.stamina / self.maxStamina))
 		self.color[2] = 60 + int(135 * (self.stamina / self.maxStamina))
 	
