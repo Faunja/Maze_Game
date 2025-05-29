@@ -21,7 +21,7 @@ class define_Grid:
 	
 	def __init__(self):	
 		self.gridSize = 101
-		self.mazeSize = 50
+		self.mazeSize = 51
 		self.boxSize = 1
 		
 		self.defultdisplaymazeSize = 9
