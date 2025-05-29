@@ -22,7 +22,7 @@ class define_Maze:
 	def create_maze(self):
 		while self.check_maze():
 			if self.siding and self.position[1] != self.size - 1:
-				if random.randint(0, 1) and self.numbers[self.position[1]][self.position[0]] != self.numbers[self.position[1]][self.position[0] + 1]:
+				if random.randint(0, 2) and self.numbers[self.position[1]][self.position[0]] != self.numbers[self.position[1]][self.position[0] + 1]:
 					self.maze[self.position[1]][self.position[0]][3] = 0
 					self.maze[self.position[1]][self.position[0] + 1][2] = 0
 					self.replace_numbers(self.numbers[self.position[1]][self.position[0]], self.numbers[self.position[1]][self.position[0] + 1])
