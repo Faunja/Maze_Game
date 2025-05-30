@@ -14,5 +14,7 @@ class define_Controls:
 
 		self.changedisplayStats = [pygame.K_F3, pygame.K_r]
 		self.fullscreen = [pygame.K_F11, pygame.K_f]
+		
+		self.keypressed = []
 
 Controls = define_Controls()
