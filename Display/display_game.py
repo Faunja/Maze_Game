@@ -27,6 +27,8 @@ def display_stats():
 	else:
 		timePrint = timePrint+str(round(Character.timeSpent[0], 2))
 	print_text("Time Spent: "+timePrint, [0, 1], (120, 120, 255))
+	xPosition = Character.mazePosition[0] + Character.gridPosition[0] * Grid.mazeSize - int(Grid.mazeSize / 2) - Character.startgridPosition[0] * Grid.mazeSize
+	yPosition = -(Character.mazePosition[1] + Character.gridPosition[1] * Grid.mazeSize - int(Grid.mazeSize / 2) - Character.startgridPosition[1] * Grid.mazeSize)
 	print_text("Position: ("+str(xPosition)+", "+str(yPosition)+")", [0, 2], (120, 120, 255))
 	print_text("Grid Position: ("+str(Character.gridPosition[0])+", "+str(Character.gridPosition[1])+")", [0, 3], (120, 120, 255))
 	print_text("Maze Position: ("+str(Character.mazePosition[0])+", "+str(Character.mazePosition[1])+")", [0, 4], (120, 120, 255))
