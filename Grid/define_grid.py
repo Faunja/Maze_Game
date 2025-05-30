@@ -59,12 +59,19 @@ class define_Grid:
 							continue
 						if sideMaze[0][col][0] + sideMaze[0][col][1] + sideMaze[0][col][2] + sideMaze[0][col][3] < 2:
 							continue
+						if not random.randint(0, 1):
+							continue
 						holes.append(col)
 						crossedWalls = [False, False]
 						canCut = False
-				for hole in holes:
+				if len(holes) == 0:
+					hole = random.radnint(0, self.mazeSize)
 					maze[self.mazeSize - 1][hole][0] = 0
 					sideMaze[0][hole][1] = 0
+				else:
+					for hole in holes:
+						maze[self.mazeSize - 1][hole][0] = 0
+						sideMaze[0][hole][1] = 0
 
 		if position[1] != 0:
 			if self.grid[position[1] - 1][position[0]] != None:
@@ -84,12 +91,19 @@ class define_Grid:
 							continue
 						if sideMaze[self.mazeSize - 1][col][0] + sideMaze[self.mazeSize - 1][col][1] + sideMaze[self.mazeSize - 1][col][2] + sideMaze[self.mazeSize - 1][col][3] < 2:
 							continue
+						if not random.randint(0, 1):
+							continue
 						holes.append(col)
 						crossedWalls = [False, False]
 						canCut = False
-				for hole in holes:
+				if len(holes) == 0:
+					hole = random.radnint(0, self.mazeSize)
 					maze[0][hole][1] = 0
 					sideMaze[self.mazeSize - 1][hole][0] = 0
+				else:
+					for hole in holes:
+						maze[0][hole][1] = 0
+						sideMaze[self.mazeSize - 1][hole][0] = 0
 
 		if position[0] != 0:
 			if self.grid[position[1]][position[0] - 1] != None:
@@ -109,12 +123,19 @@ class define_Grid:
 							continue
 						if sideMaze[row][self.mazeSize - 1][0] + sideMaze[row][self.mazeSize - 1][1] + sideMaze[row][self.mazeSize - 1][2] + sideMaze[row][self.mazeSize - 1][3] < 2:
 							continue
+						if not random.randint(0, 2):
+							continue
 						holes.append(row)
 						crossedWalls = [False, False]
 						canCut = False
-				for hole in holes:
+				if len(holes) == 0:
+					hole = random.radnint(0, self.mazeSize)
 					maze[hole][0][2] = 0
 					sideMaze[hole][self.mazeSize - 1][3] = 0
+				else:
+					for hole in holes:
+						maze[hole][0][2] = 0
+						sideMaze[hole][self.mazeSize - 1][3] = 0
 		
 		if position[0] != self.gridSize - 1:
 			if self.grid[position[1]][position[0] + 1] != None:
@@ -134,12 +155,19 @@ class define_Grid:
 							continue
 						if sideMaze[row][0][0] + sideMaze[row][0][1] + sideMaze[row][0][2] + sideMaze[row][0][3] < 2:
 							continue
+						if not random.randint(0, 2):
+							continue
 						holes.append(row)
 						crossedWalls = [False, False]
 						canCut = False
-				for hole in holes:
+				if len(holes) == 0:
+					hole = random.radnint(0, self.mazeSize)
 					maze[hole][self.mazeSize - 1][3] = 0
 					sideMaze[hole][0][2] = 0
+				else:
+					for hole in holes:
+						maze[hole][self.mazeSize - 1][3] = 0
+						sideMaze[hole][0][2] = 0
 
 	def create_exit(self):
 		downright = random.randint(0, 1)
