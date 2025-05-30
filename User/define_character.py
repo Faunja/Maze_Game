@@ -158,17 +158,15 @@ class define_Character():
 		currentgridPosition = [self.gridPosition[0] - self.startgridPosition[0], self.gridPosition[1] - self.startgridPosition[1]]
 		xmazePosition = int(Grid.mazeSize / 2) + round(self.position[0] / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize
 		ymazePosition = int(Grid.mazeSize / 2) + round(self.position[1] / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize
-		oldxmazePosition = int(Grid.mazeSize / 2) + round((self.position[0] - self.velocity[0]) / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize
-		oldymazePosition = int(Grid.mazeSize / 2) + round((self.position[1] - self.velocity[1]) / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize
-		if xmazePosition != oldxmazePosition and ymazePosition != oldymazePosition:
+		if xmazePosition != self.mazePosition[0] and ymazePosition != self.mazePosition[1]:
 			if abs(self.velocity[0]) > abs(self.velocity[1]):
-				ymazePosition = oldymazePosition
+				ymazePosition = self.mazePosition[1]
 			elif abs(self.velocity[1]) > abs(self.velocity[0]):
-				xmazePosition = oldxmazePosition
+				xmazePosition = self.mazePosition[0]
 			else:
 				direction = random.randint(0, 1)
-				xmazePosition += (oldxmazePosition - xmazePosition) * direction
-				ymazePosition += (oldymazePosition - ymazePosition) * (1 - direction)
+				xmazePosition += (self.mazePosition[0] - xmazePosition) * direction
+				ymazePosition += (self.mazePosition[1] - ymazePosition) * (1 - direction)
 		self.mazePosition = [xmazePosition, ymazePosition]
 		if self.mazePosition[0] <= -1:
 			self.mazePosition[0] = 0
