@@ -12,12 +12,16 @@ def event_keydown(keypress):
 
 	if keypress in Controls.moveDown:
 		Character.movement[1] = 1
+		Controls.keypressed.append(keypress)
 	if keypress in Controls.moveUp:
 		Character.movement[1] = -1
+		Controls.keypressed.append(keypress)
 	if keypress in Controls.moveLeft:
 		Character.movement[0] = -1
+		Controls.keypressed.append(keypress)
 	if keypress in Controls.moveRight:
 		Character.movement[0] = 1
+		Controls.keypressed.append(keypress)
 	if keypress in Controls.holdRun and Character.tired == False:
 		Character.running = True
 
@@ -31,14 +35,34 @@ def event_keydown(keypress):
 		Display.toggle_fullscreen()
 
 def event_keyup(keypress):
-	if keypress in Controls.moveDown and Character.movement[1] == 1:
-		Character.movement[1] = 0
-	if keypress in Controls.moveUp and Character.movement[1] == -1:
-		Character.movement[1] = 0
-	if keypress in Controls.moveLeft and Character.movement[0] == -1:
-		Character.movement[0] = 0
-	if keypress in Controls.moveRight and Character.movement[0] == 1:
-		Character.movement[0] = 0
+	if keypress in Controls.moveDown:
+		if Character.movement[1] == 1:
+			Character.movement[1] = 0
+			for key in Controls.keypressed:
+				if key in Controls.moveUp:
+					Character.movement[1] = -1
+		Controls.keypressed.remove(keypress)
+	if keypress in Controls.moveUp:
+		if Character.movement[1] == -1:
+			Character.movement[1] = 0
+			for key in Controls.keypressed:
+				if key in Controls.moveDown:
+					Character.movement[1] = 1
+		Controls.keypressed.remove(keypress)
+	if keypress in Controls.moveLeft :
+		if Character.movement[0] == -1:
+			Character.movement[0] = 0
+			for key in Controls.keypressed:
+				if key in Controls.moveRight:
+					Character.movement[0] = 1
+		Controls.keypressed.remove(keypress)
+	if keypress in Controls.moveRight :
+		if Character.movement[0] == 1:
+			Character.movement[0] = 0
+			for key in Controls.keypressed:
+				if key in Controls.moveLeft:
+					Character.movement[0] = -1
+		Controls.keypressed.remove(keypress)
 	if keypress in Controls.holdRun:
 		Character.running = False
 
