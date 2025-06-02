@@ -25,6 +25,8 @@ class define_Display:
 		self.memorywallColor = self.memorywallColors[self.nightTime]
 		self.floorColors = [(255, 255, 255), (0, 0, 0)]
 		self.floorColor = self.floorColors[self.nightTime]
+
+		User.update_display(self.DisplayWidth, self.DisplayHeight, self.fullscreen)
 	
 	def check_displaySize(self):
 		if self.DisplayWidth < int(User.ScreenSize[0] / 4):

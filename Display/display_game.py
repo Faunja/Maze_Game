@@ -125,7 +125,7 @@ def display_grid():
 def display_game():
 	pygame.draw.rect(User.Display, Display.floorColor, (0, 0, Display.DisplayWidth, Display.DisplayHeight))
 	if Character.completedMaze == False:
-		display_grid()
+		draw_grid()
 		display_character()
 		if Display.displayStats:
 			display_stats()
