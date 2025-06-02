@@ -4,24 +4,6 @@ from User.define_user import User
 from Grid.define_grid import Grid
 
 class define_Display:
-	def load_display(self):
-		with open('Save_data/Display.pkl', 'rb') as file:
-			reference = pickle.load(file)
-			try:
-				self.fullscreen = reference.fullscreen
-				self.displayDifference = reference.displayDifference
-				self.DisplayWidth = reference.DisplayWidth
-				self.DisplayHeight = reference.DisplayHeight
-				self.ScreenOffset = reference.ScreenOffset
-				self.CenterDisplay = reference.CenterDisplay
-
-				self.displayStats = reference.displayStats
-				self.nightTime = reference.nightTime
-				
-				self.tileSize = reference.tileSize
-			except:
-				pass
-
 	def __init__(self):
 		self.fullscreen = False
 		self.displayDifference = 4 / 5
@@ -43,11 +25,6 @@ class define_Display:
 		self.memorywallColor = self.memorywallColors[self.nightTime]
 		self.floorColors = [(255, 255, 255), (0, 0, 0)]
 		self.floorColor = self.floorColors[self.nightTime]
-
-		if os.path.exists('Save_data/Display.pkl'):
-			self.load_display()
-
-		User.update_display(self.DisplayWidth, self.DisplayHeight, self.fullscreen)
 	
 	def check_displaySize(self):
 		if self.DisplayWidth < int(User.ScreenSize[0] / 4):

@@ -3,22 +3,6 @@ from User.define_user import User
 from Grid.define_maze import define_Maze
 
 class define_Grid:
-	def load_grid(self):
-		with open('Save_data/Grid.pkl', 'rb') as file:
-			reference = pickle.load(file)
-			try:
-				self.grid = reference.grid
-				
-				self.gridSize = reference.gridSize
-				self.mazeSize = reference.mazeSize
-				self.boxSize = reference.boxSize
-				
-				self.displaymazeSize = reference.displaymazeSize
-				self.displayChunk = reference.displayChunk
-				self.wallWidth = reference.wallWidth
-			except:
-				pass
-	
 	def __init__(self):	
 		self.gridSize = 101
 		self.mazeSize = 51
@@ -35,9 +19,6 @@ class define_Grid:
 			for column in range(self.gridSize):
 				self.grid[row].append(None)
 		self.create_exit()
-		
-		if os.path.exists('Save_data/Grid.pkl'):
-			self.load_grid()
 
 	def cut_chunkWalls(self, position):
 		maze = self.grid[position[1]][position[0]].maze

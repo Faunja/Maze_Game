@@ -3,22 +3,6 @@ from User.define_user import User
 from Grid.define_grid import Grid
 
 class define_Character():
-	def load_character(self):
-		with open('Save_data/Character.pkl', 'rb') as file:
-			reference = pickle.load(file)
-			try:
-				self.position = reference.position
-				self.startgridPosition = reference.startgridPosition
-				self.gridPosition = reference.gridPosition
-				self.mazePosition = reference.mazePosition
-
-				self.stamina = reference.stamina
-				self.tired = reference.tired
-				self.timePassed = reference.timePassed
-				self.timeSpent = reference.timeSpent
-			except:
-				pass
-
 	def __init__(self):
 		self.timeSpent = [0, 0, 0]
 		self.completedMaze = False
@@ -50,9 +34,6 @@ class define_Character():
 		self.timePassed = self.cooldown
 		self.tiredmaxVelocity = self.maxVelocity / 2
 		self.tiredspeedGain = self.speedGain / 2
-		
-		if os.path.exists('Save_data/Character.pkl'):
-			self.load_character()
 		
 	def update_running(self):
 		if self.stamina <= 0 and not self.tired:

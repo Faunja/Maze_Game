@@ -6,13 +6,6 @@ from User.define_character import Character
 from Grid.define_grid import Grid
 
 class define_Map:
-	def load_map(self):
-		with open('Save_data/Map.pkl', 'rb') as file:
-			reference = pickle.load(file)
-			self.oldPositions = reference.oldPositions
-			self.storedPositions = reference.storedPositions
-			self.cameraPosition = Character.position.copy()
-	
 	def __init__(self):
 		self.oldPositions = []
 		self.storedPositions = []
@@ -34,9 +27,6 @@ class define_Map:
 		self.friction = .8
 		
 		self.displaygridPosition = Character.gridPosition.copy()
-		
-		if os.path.exists('Save_data/Map.pkl'):
-			self.load_map()
 
 	def update_oldPositions(self):
 		for position in self.currentPositions:

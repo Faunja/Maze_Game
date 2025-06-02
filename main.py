@@ -6,6 +6,7 @@ from Display.display_game import display_game
 from event_handler import event_handler
 
 def main():
+	Pickler.unpickle_data()
 	while User.playing:
 		User.clock.tick(User.FPS)
 		Pickler.check_pickle()
