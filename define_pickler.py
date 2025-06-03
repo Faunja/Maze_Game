@@ -23,6 +23,7 @@ class define_pickler:
 			with open('Save_data/Character.pkl', 'rb') as file:
 				referenceData = pickle.load(file)
 				self.check_data(Character, referenceData)
+				Character.movement = [0, 0]
 		if os.path.exists('Save_data/Map.pkl'):
 			with open('Save_data/Map.pkl', 'rb') as file:
 				referenceData = pickle.load(file)

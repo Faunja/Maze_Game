@@ -14,24 +14,26 @@ class define_Character():
 		self.startgridPosition = [int(Grid.gridSize / 2), int(Grid.gridSize / 2)]
 		self.gridPosition = self.startgridPosition
 		self.mazePosition = [int(Grid.mazeSize / 2), int(Grid.mazeSize / 2)]
-
+		
+		self.running = False
+		self.maxStamina = 135
+		self.staminaTime = 5
+		self.staminaGain = 4
+		self.stamina = self.maxStamina
+		
+		self.tired = False
+		self.cooldown = 2
+		self.timePassed = self.cooldown
+		
 		self.movement = [0, 0]
 		self.maxVelocity = self.width / 5
 		self.velocity = [0, 0]
 		self.speedGain = 1 / 5
-		self.stillFriction = .8
+		self.stillFriction = .85
 		self.movingFriction = .9
 		
-		self.running = False
-		self.maxStamina = 100
-		self.staminaTime = 5
-		self.staminaGain = 4
-		self.stamina = self.maxStamina
 		self.runningmaxVelocity = self.maxVelocity * 1.5
 		self.runningspeedGain = self.speedGain * 1.5
-		self.tired = False
-		self.cooldown = 2
-		self.timePassed = self.cooldown
 		self.tiredmaxVelocity = self.maxVelocity / 2
 		self.tiredspeedGain = self.speedGain / 2
 		
@@ -80,19 +82,19 @@ class define_Character():
 
 		if self.running:
 			if abs(self.velocity[0]) > self.runningmaxVelocity:
-				self.velocity[0] = abs(self.velocity[0]) / self.velocity[0] * self.runningmaxVelocity
+				self.velocity[0] *= self.stillFriction
 			if abs(self.velocity[1]) > self.runningmaxVelocity:
-				self.velocity[1] = abs(self.velocity[1]) / self.velocity[1] * self.runningmaxVelocity
-		elif self.running:
+				self.velocity[1] *= self.stillFriction
+		elif self.tired:
 			if abs(self.velocity[0]) > self.tiredmaxVelocity:
-				self.velocity[0] = abs(self.velocity[0]) / self.velocity[0] * self.tiredmaxVelocity
+				self.velocity[0] *= self.stillFriction
 			if abs(self.velocity[1]) > self.tiredmaxVelocity:
-				self.velocity[1] = abs(self.velocity[1]) / self.velocity[1] * self.tiredmaxVelocity
+				self.velocity[0] *= self.stillFriction
 		else:
 			if abs(self.velocity[0]) > self.maxVelocity:
-				self.velocity[0] = abs(self.velocity[0]) / self.velocity[0] * self.maxVelocity
+				self.velocity[0] *= self.stillFriction
 			if abs(self.velocity[1]) > self.maxVelocity:
-				self.velocity[1] = abs(self.velocity[1]) / self.velocity[1] * self.maxVelocity
+				self.velocity[1] *= self.stillFriction
 
 	def hit_mazeWall(self):
 		if self.completedMaze:
