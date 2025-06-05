@@ -32,7 +32,7 @@ def display_stats():
 	print_text("Position: ("+str(xPosition)+", "+str(yPosition)+")", [0, 2], (120, 120, 255))
 	print_text("Grid Position: ("+str(Character.gridPosition[0])+", "+str(Character.gridPosition[1])+")", [0, 3], (120, 120, 255))
 	print_text("Maze Position: ("+str(Character.mazePosition[0])+", "+str(Character.mazePosition[1])+")", [0, 4], (120, 120, 255))
-	print_text("Stamina: "+str(round(Character.stamina / Character.maxStamina * 100, 3)), [0, 5], (120, 120, 255))
+	print_text("Stamina: "+str(round(Character.stamina[1] / Character.stamina[0] * 100, 3)), [0, 5], (120, 120, 255))
 	if User.clock.get_fps() < 40:
 		print_text("FPS: "+f'{User.clock.get_fps() :.1f}', [0, 0], (255, 60, 60))
 		return

@@ -15,86 +15,57 @@ class define_Character():
 		self.gridPosition = self.startgridPosition
 		self.mazePosition = [int(Grid.mazeSize / 2), int(Grid.mazeSize / 2)]
 		
-		self.running = False
-		self.maxStamina = 135
-		self.staminaTime = 5
-		self.staminaGain = 4
-		self.stamina = self.maxStamina
-		
-		self.tired = False
-		self.cooldown = 2
-		self.timePassed = self.cooldown
-		
-		self.movement = [0, 0]
 		self.maxVelocity = self.width / 5
 		self.velocity = [0, 0]
-		self.speedGain = 1 / 5
-		self.stillFriction = .85
-		self.movingFriction = .9
+		self.speedGain = 1 / 80
+		self.stillFriction = 128
+		self.movingFriction = 135
 		
-		self.runningmaxVelocity = self.maxVelocity * 1.5
-		self.runningspeedGain = self.speedGain * 1.5
-		self.tiredmaxVelocity = self.maxVelocity / 2
-		self.tiredspeedGain = self.speedGain / 2
-		
+		self.direction = [0, 0]
+		self.movements = {"walking" : 1, "running" : 1.5, "tired" : .5}
+		self.moving = "walking"
+		self.stamina = [135, 135]
+		self.staminaTime = 5
+		self.staminaGain = 4
+		self.cooldown = [32, 32]
+
 	def update_running(self):
-		if self.stamina <= 0 and not self.tired:
-			self.running = False
-			self.stamina = 0
-			self.tired = True
-			self.timePassed = 0
-		if not self.tired:
-			if not self.running and self.stamina != self.maxStamina:
-				self.stamina += self.maxStamina / self.staminaGain / User.FPS
-			if self.stamina > self.maxStamina:
-				self.stamina = self.maxStamina
+		if self.stamina[1] <= 0 and self.moving != "tired":
+			self.stamina[1] = 0
+			self.cooldown[1] = 0
+		if self.moving != "tired":
+			if self.moving != "running" and self.stamina[1] != self.stamina[0]:
+				self.stamina[1] += self.stamina[0] / self.staminaGain / User.actualFPS
+			if self.stamina[1] > self.stamina[0]:
+				self.stamina[1] = self.stamina[0]
 		else:
-			if self.timePassed <= self.cooldown:
-				self.timePassed += 1 / User.FPS
+			if self.cooldown[1] <= self.cooldown[0]:
+				self.cooldown[1] += 1 / 16 * User.deltaTime / User.actualFPS
 			else:
-				self.stamina += self.maxStamina / self.staminaGain / User.FPS
-				self.tired = False
-		if self.running and self.stamina != 0:
-			self.stamina -= self.maxStamina / self.staminaTime / User.FPS
-		self.color[0] = 195 - int(135 * (self.stamina / self.maxStamina))
-		self.color[2] = 60 + int(135 * (self.stamina / self.maxStamina))
+				self.stamina[1] += self.stamina[0] / self.staminaGain / User.actualFPS
+		if self.moving == "running" and self.stamina[1] != 0:
+			self.stamina[1] -= self.stamina[0] / self.staminaTime / User.actualFPS
+		self.color[0] = 195 - int(135 * (self.stamina[1] / self.stamina[0]))
+		self.color[2] = 60 + int(135 * (self.stamina[1] / self.stamina[0]))
 	
 	def update_velocity(self):
 		self.update_running()
-		if self.running:
-			self.velocity[0] += self.runningmaxVelocity * self.runningspeedGain * self.movement[0]
-			self.velocity[1] += self.runningmaxVelocity * self.runningspeedGain * self.movement[1]
-		elif self.tired:
-			self.velocity[0] += self.tiredmaxVelocity * self.tiredspeedGain * self.movement[0]
-			self.velocity[1] += self.tiredmaxVelocity * self.tiredspeedGain * self.movement[1]
-		else:
-			self.velocity[0] += self.maxVelocity * self.speedGain * self.movement[0]
-			self.velocity[1] += self.maxVelocity * self.speedGain * self.movement[1]
+		self.velocity[0] += (self.maxVelocity * self.movements[self.moving]) * (self.speedGain * User.deltaTime * self.movements[self.moving]) * self.direction[0]
+		self.velocity[1] += (self.maxVelocity * self.movements[self.moving]) * (self.speedGain * User.deltaTime * self.movements[self.moving]) * self.direction[1]
 
-		if self.movement[0] != 0:
-			self.velocity[0] *= self.movingFriction
+		if self.direction[0] != 0:
+			self.velocity[0] -= self.velocity[0] / self.movingFriction * User.deltaTime
 		else:
-			self.velocity[0] *= self.stillFriction
-		if self.movement[1] != 0:
-			self.velocity[1] *= self.movingFriction
+			self.velocity[0] -= self.velocity[0] / self.stillFriction * User.deltaTime
+		if self.direction[1] != 0:
+			self.velocity[1] -= self.velocity[1] / self.movingFriction * User.deltaTime
 		else:
-			self.velocity[1] *= self.stillFriction
+			self.velocity[1] -= self.velocity[1] / self.stillFriction * User.deltaTime
 
-		if self.running:
-			if abs(self.velocity[0]) > self.runningmaxVelocity:
-				self.velocity[0] *= self.stillFriction
-			if abs(self.velocity[1]) > self.runningmaxVelocity:
-				self.velocity[1] *= self.stillFriction
-		elif self.tired:
-			if abs(self.velocity[0]) > self.tiredmaxVelocity:
-				self.velocity[0] *= self.stillFriction
-			if abs(self.velocity[1]) > self.tiredmaxVelocity:
-				self.velocity[0] *= self.stillFriction
-		else:
-			if abs(self.velocity[0]) > self.maxVelocity:
-				self.velocity[0] *= self.stillFriction
-			if abs(self.velocity[1]) > self.maxVelocity:
-				self.velocity[1] *= self.stillFriction
+		if abs(self.velocity[0]) > self.maxVelocity * self.movements[self.moving]:
+			self.velocity[0] = self.maxVelocity * self.movements[self.moving] * (abs(self.velocity[0]) / self.velocity[0])
+		if abs(self.velocity[1]) > self.maxVelocity * self.movements[self.moving]:
+			self.velocity[1] = self.maxVelocity * self.movements[self.moving] * (abs(self.velocity[1]) / self.velocity[1])
 
 	def hit_mazeWall(self):
 		if self.completedMaze:
@@ -162,8 +133,8 @@ class define_Character():
 		Grid.update_chunks(self.gridPosition)
 	
 	def update_character(self):
-		self.position[0] += self.velocity[0]
-		self.position[1] += self.velocity[1]
+		self.position[0] += self.velocity[0] / 16 * User.deltaTime
+		self.position[1] += self.velocity[1] / 16 * User.deltaTime
 		self.update_velocity()
 		if self.completedMaze == False:
 			self.update_gridPosition()

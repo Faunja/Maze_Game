@@ -22,9 +22,9 @@ class define_Map:
 		
 		self.cameraPosition = [0, 0]
 		self.differenceLimit = [Grid.displaymazeSize / 4, Grid.displaymazeSize / 4]
-		self.cameraVelocity = 1 / 20
+		self.cameraVelocity = 320
 		self.velocity = [0, 0]
-		self.friction = .8
+		self.friction = 128
 		
 		self.displaygridPosition = Character.gridPosition.copy()
 
@@ -109,8 +109,8 @@ class define_Map:
 		if self.cameraPosition[1] > Character.position[1] + self.differenceLimit[1] or self.cameraPosition[1] < Character.position[1] - self.differenceLimit[1]:
 			self.cameraMoving = True
 		if self.cameraMoving == True:
-			self.cameraPosition[0] += (Character.position[0] - self.cameraPosition[0]) * self.cameraVelocity
-			self.cameraPosition[1] += (Character.position[1] - self.cameraPosition[1]) * self.cameraVelocity
+			self.cameraPosition[0] += (Character.position[0] - self.cameraPosition[0]) / self.cameraVelocity * User.deltaTime
+			self.cameraPosition[1] += (Character.position[1] - self.cameraPosition[1]) / self.cameraVelocity * User.deltaTime
 		if round(self.cameraPosition[0], int(Grid.mazeSize / 3)) == round(Character.position[0], int(Grid.mazeSize / 3)) and round(self.cameraPosition[1], int(Grid.mazeSize / 3)) == round(Character.position[1], int(Grid.mazeSize / 3)):
 			self.cameraMoving = False
 	
@@ -119,8 +119,8 @@ class define_Map:
 			self.oldmousePosition = None
 			self.cameraPosition[0] += self.velocity[0]
 			self.cameraPosition[1] += self.velocity[1]
-			self.velocity[0] *= self.friction
-			self.velocity[1] *= self.friction
+			self.velocity[0] -= self.velocity[0] / self.friction * User.deltaTime
+			self.velocity[1] -= self.velocity[1] / self.friction * User.deltaTime
 			return
 		mousePosition = pygame.mouse.get_pos()
 		if self.oldmousePosition == None:

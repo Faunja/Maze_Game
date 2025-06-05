@@ -12,6 +12,8 @@ class define_User:
 		self.aspectRatio = self.ScreenSize[0] / self.ScreenSize[1]
 
 		self.FPS = 60
+		self.actualFPS = 60
+		self.deltaTime = 16
 		self.clock = pygame.time.Clock()
 		self.playing = True
 	
