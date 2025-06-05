@@ -27,6 +27,7 @@ class define_Map:
 		self.friction = 128
 		
 		self.displaygridPosition = Character.gridPosition.copy()
+		self.displaymazePosition = Character.mazePosition.copy()
 
 	def update_oldPositions(self):
 		for position in self.currentPositions:
@@ -151,6 +152,16 @@ class define_Map:
 		self.update_oldPositions()
 		self.update_currentPosition()
 		self.displaygridPosition = [round(Grid.gridSize / 2) + round(self.cameraPosition[0] / Grid.mazeSize), round(Grid.gridSize / 2) + round(self.cameraPosition[1] / Grid.mazeSize)]
+		currentgridPosition = [self.displaygridPosition[0] - Character.startgridPosition[0], self.displaygridPosition[1] - Character.startgridPosition[1]]
+		self.displaymazePosition = [int(Grid.mazeSize / 2) + round(self.cameraPosition[0] / Grid.boxSize) - currentgridPosition[0] * Grid.mazeSize, int(Grid.mazeSize / 2) + round(self.cameraPosition[1] / Grid.boxSize) - currentgridPosition[1] * Grid.mazeSize]
+		if self.displaymazePosition[0] <= -1:
+			self.displaymazePosition[0] = 0
+		if self.displaymazePosition[0] >= Grid.mazeSize:
+			self.displaymazePosition[0] = Grid.mazeSize - 1
+		if self.displaymazePosition[1] <= -1:
+			self.displaymazePosition[1] = 0
+		if self.displaymazePosition[1] >= Grid.mazeSize:
+			self.displaymazePosition[1] = Grid.mazeSize - 1
 		if self.centeredMap:
 			self.adjust_camera()
 		else:
@@ -158,3 +169,4 @@ class define_Map:
 		
 
 Map = define_Map()
+

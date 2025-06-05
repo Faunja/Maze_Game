@@ -97,16 +97,10 @@ class define_Character():
 
 	def update_gridPosition(self):
 		self.gridPosition = [round(Grid.gridSize / 2) + round(self.position[0] / Grid.mazeSize), round(Grid.gridSize / 2) + round(self.position[1] / Grid.mazeSize)]
-		if self.gridPosition[0] <= -1:
+		if self.gridPosition[0] <= -1 or self.gridPosition[0] >= Grid.gridSize:
 			self.completedMaze = True
 			return
-		if self.gridPosition[0] >= Grid.gridSize:
-			self.completedMaze = True
-			return
-		if self.gridPosition[1] <= -1:
-			self.completedMaze = True
-			return
-		if self.gridPosition[1] >= Grid.gridSize:
+		elif self.gridPosition[1] <= -1 or self.gridPosition[1] >= Grid.gridSize:
 			self.completedMaze = True
 			return
 		currentgridPosition = [self.gridPosition[0] - self.startgridPosition[0], self.gridPosition[1] - self.startgridPosition[1]]
@@ -139,7 +133,7 @@ class define_Character():
 		if self.completedMaze == False:
 			self.update_gridPosition()
 			self.hit_mazeWall()
-			self.timeSpent[0] += 1 / User.FPS
+			self.timeSpent[0] += 1 / User.actualFPS
 			if self.timeSpent[0] >= 60:
 				self.timeSpent[1] += 1
 				self.timeSpent[0] -= 60
