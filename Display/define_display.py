@@ -1,6 +1,7 @@
 import pygame, os, pickle
 from pygame.locals import *
 from User.define_user import User
+from Grid.define_grid import Grid
 
 class define_Display:
 	def __init__(self):
@@ -16,7 +17,7 @@ class define_Display:
 		self.displayStats = False
 		self.nightTime = 1
 		
-		self.tileSize = self.DisplayHeight / 9
+		self.tileSize = self.DisplayHeight / Grid.displaymazeSize
 		
 		self.wallColors = [(0, 0, 0), (255, 255, 255)]
 		self.wallColor = self.wallColors[self.nightTime]
@@ -44,11 +45,11 @@ class define_Display:
 		if self.DisplayHeight < self.DisplayWidth:
 			self.ScreenOffset[1] = 0
 			self.ScreenOffset[0] = round((self.DisplayWidth - self.DisplayHeight) / 2)
-			self.tileSize = self.DisplayHeight / 9
+			self.tileSize = self.DisplayHeight / Grid.displaymazeSize
 		else:
 			self.ScreenOffset[1] = round((self.DisplayHeight - self.DisplayWidth) / 2)
 			self.ScreenOffset[0] = 0
-			self.tileSize = self.DisplayWidth / 9
+			self.tileSize = self.DisplayWidth / Grid.displaymazeSize
 		self.CenterDisplay = [round(self.DisplayWidth / 2), round(self.DisplayHeight / 2)]
 		User.update_display(self.DisplayWidth, self.DisplayHeight, self.fullscreen)
 	
